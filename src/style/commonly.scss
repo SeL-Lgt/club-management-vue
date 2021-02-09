@@ -1,0 +1,28 @@
+@mixin centered{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+$color:#409EFF;
+$width:2px;
+$radius:10px;
+$scrollbarBackground:#f5f5f5;
+
+::-webkit-scrollbar{
+  background: transparent;
+  width: $width;
+}
+::-webkit-scrollbar-track{
+  border-radius: $radius;
+  background: $scrollbarBackground;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: $radius;
+  background: $color;
+}
+
+::-webkit-scrollbar:vertical{
+  display: none;
+}
