@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <keep-alive exclude=""></keep-alive>
     <router-view/>
   </div>
 </template>
@@ -14,6 +13,9 @@ export default {
     window.addEventListener('scroll', this.handleScroll);
   },
   methods: {
+    /**
+     * 处理滚动
+     */
     handleScroll() {
       // 剩余高度
       const surplus = document.documentElement.scrollHeight - document.documentElement.clientHeight;

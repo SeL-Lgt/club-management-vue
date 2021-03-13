@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-const Home = () => import('@/views/home/Index.vue');
+const Home = () => import('@/views/home');
 const routes = [
   {
     path: '/',
