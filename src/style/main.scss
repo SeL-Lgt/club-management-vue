@@ -6,3 +6,6 @@ $font-size:62.5%;
 body{
   font-size: $font-size;
 }
+*:focus{
+  outline: -webkit-focus-ring-color auto 0;
+}

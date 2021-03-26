@@ -1,0 +1,39 @@
+.el-container ::v-deep .el-aside {
+  height: 100vh;
+  border-right: solid 0 #e6e6e6;
+
+  .el-menu {
+    border-right: 0;
+    background: transparent;
+
+    &-item {
+      color: white;
+    }
+    .el-submenu__title{
+      color: white;
+      &:focus,&:hover{
+        background: #1c1343;
+      }
+    }
+    &-item:focus,
+    &-item:hover {
+      background: #1c1343;
+    }
+  }
+}
+
+#layout {
+  .container {
+    flex-direction: column;
+  }
+
+  .bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: calc(85vw);
+    height: 30vh;
+    background: #208bff;
+    z-index: -1;
+  }
+}
