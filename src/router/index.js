@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import BackHome from '@/router/modules/backHome';
+import UserInfo from '@/router/modules/userInfo';
 
 Vue.use(VueRouter);
 
@@ -12,7 +13,7 @@ const routes = [
   {
     path: '/',
     name: '/',
-    redirect: '/backstage',
+    redirect: '/home',
     component: App,
     children: [
       {
@@ -32,6 +33,7 @@ const routes = [
     component: Layout,
     children: [
       BackHome,
+      UserInfo,
     ],
   },
 ];

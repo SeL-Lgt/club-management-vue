@@ -1,6 +1,6 @@
 <template>
   <el-aside id="aside" width="15vw">
-    <div class="title">
+    <div class="title" @click="$router.push('/home')">
       <p>社团管理系统</p>
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
@@ -67,26 +67,8 @@ export default {
         },
         {
           icon: 'el-icon-s-order',
-          index: '/basicInformation',
+          index: '/userInfo',
           title: '个人信息管理',
-          subs: [
-            {
-              index: 'customerData',
-              title: '客户资料',
-            },
-            {
-              index: 'productData',
-              title: '产品数据',
-            },
-            {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
-            },
-          ],
         },
         {
           icon: 'el-icon-s-order',

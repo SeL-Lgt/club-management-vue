@@ -1,6 +1,5 @@
 <template>
   <div id="backHome">
-   asdasd
   </div>
 </template>
 
