@@ -24,11 +24,10 @@
           <el-input v-model="registeredInfo.classname"/>
         </el-form-item>
       </el-form>
-      <Table :table-prop=tableProp />
+      <Table :table-prop="tableProp"/>
     </el-col>
     <el-col :span="4" class="left">
       <el-image :src="Logo"/>
-      <el-button>上传头像</el-button>
       <el-button v-if="changer" type="primary" @click="changerUserInfo()">修改信息</el-button>
       <template v-else>
         <el-row>
@@ -46,6 +45,7 @@
 import * as checkRules from '@/utils/InfoRules';
 import Logo from '@/assets/logo.png';
 import Table from '@/components/table/index.vue';
+import { queryUserByNumber, updateUser } from '@/api/user';
 
 export default {
   name: 'UserInfo',
@@ -87,19 +87,19 @@ export default {
       registeredInfo: this.$store.state.userInfo,
       tableProp: [
         {
-          prop: '',
+          prop: 'name',
           label: '社团名字',
         },
         {
-          prop: '',
+          prop: 'type',
           label: '社团类别',
         },
         {
-          prop: '',
+          prop: 'test',
           label: '社团职位',
         },
         {
-          prop: '',
+          prop: 'time',
           label: '加入时间',
         },
       ],
@@ -111,14 +111,22 @@ export default {
   methods: {
     changerUserInfo() {
       this.changer = !this.changer;
-      this.registeredInfo = this.$store.state.userInfo;
     },
     updateUserInfo() {
       this.changer = !this.changer;
+      updateUser(this.registeredInfo)
+        .then((res) => {
+          console.log(res);
+        });
     },
     reset() {
       this.changer = !this.changer;
-      this.registeredInfo = this.$store.state.userInfo;
+      queryUserByNumber({ number: sessionStorage.getItem('user') })
+        .then((res) => {
+          console.log(res);
+          this.$store.commit('saveUserInfo', res.data);
+          this.registeredInfo = this.$store.state.userInfo;
+        });
     },
   },
   components: {

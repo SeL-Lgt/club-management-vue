@@ -217,6 +217,45 @@ $homeUrl: "~@/assets/home.jpg";
 
   }
 
+  .societies {
+    background: rgba(00, 00, 11, 0.4);
+    width: calc(30vw);
+    height: calc(60vh);
+    border-radius: calc(1vw);
+    padding: calc(2vh) calc(2vw);
+
+    .title {
+      font-size: 2rem;
+      color: white;
+      text-align: center;
+      height: 18%;
+      line-height: calc(35 * 0.20vh);
+    }
+
+    .content {
+      ::v-deep .el-form-item__label {
+        color: #FFF;
+      }
+
+      ::v-deep .el-textarea,
+      ::v-deep .el-input {
+        width: 80%;
+      }
+
+      ::v-deep .el-select {
+        width: 80%;
+
+        .el-input {
+          width: 100%;
+        }
+      }
+
+      ::v-deep .el-button {
+        width: 38%;
+      }
+    }
+  }
+
   .login {
     background: rgba(00, 00, 11, 0.4);
     width: calc(30vw);
@@ -277,6 +316,7 @@ $homeUrl: "~@/assets/home.jpg";
         color: #FFF;
       }
 
+      ::v-deep .el-textarea,
       ::v-deep .el-input {
         width: 80%;
       }

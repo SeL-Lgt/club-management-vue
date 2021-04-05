@@ -11,8 +11,8 @@ import { queryUserByNumber } from '@/api/user';
 export default {
   name: 'App',
   created() {
-    if (localStorage.getItem('user')) {
-      queryUserByNumber({ number: localStorage.getItem('user') })
+    if (sessionStorage.getItem('user')) {
+      queryUserByNumber({ number: sessionStorage.getItem('user') })
         .then((res) => {
           console.log(res);
           this.$store.commit('saveUserInfo', res.data);

@@ -44,7 +44,52 @@
         </div>
       </template>
     </maskDemo>
-    <!--  社团信息  -->
+    <!--  创建社团  -->
+    <maskDemo v-if="event==2" ref="maskDemo">
+      <template #content>
+        <div class="societies back">
+          <div class="title">创建社团</div>
+          <div class="content">
+            <el-form ref="societiesInfo"
+                     status-icon
+                     label-width="30%"
+                     :rules="registeredRules"
+                     :model="societiesInfo"
+            >
+              <el-form-item label="社团名字:" prop="sname">
+                <el-input v-model="societiesInfo.sname"/>
+              </el-form-item>
+              <el-form-item label="创建人学号:" prop="founder">
+                <!--                <el-input v-model="societiesInfo.founder" disabled/>-->
+                <span style="color:white">{{ societiesInfo.founder }}</span>
+              </el-form-item>
+              <el-form-item label="指导老师:" prop="instructor">
+                <el-input v-model="societiesInfo.instructor"/>
+              </el-form-item>
+              <el-form-item label="社团所属类别:" prop="association">
+                <el-select v-model="societiesInfo.association" placeholder="请选择社团类型">
+                  <el-option v-for="(item,index) in societiesType"
+                             :key="index"
+                             :label="item.typename"
+                             :value="item.id"
+                             style="width: 16.8vw"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="简介:" prop="introduction">
+                <el-input type="textarea" clearable v-model="societiesInfo.introduction"/>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="createSocieties">立即创建</el-button>
+                <el-button @click="resetForm('societiesInfo')">取消</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </template>
+    </maskDemo>
+
+    <!--  登录注册  -->
     <maskDemo v-if="event==4" ref="maskDemo">
       <template #content>
         <div :class="{login:true,to:LoginToRegistered,back:!LoginToRegistered}">
@@ -64,7 +109,6 @@
             没有账号?注册
           </div>
         </div>
-        <div></div>
       </template>
     </maskDemo>
     <maskDemo v-if="event==5" ref="maskDemo">
@@ -95,7 +139,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="registered">立即创建</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="resetForm('registered')">取消</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -117,6 +161,7 @@ import P4 from '@/assets/home/p4.jpg';
 
 import maskDemo from '@/components/maskDemo/index.vue';
 import { login, registered } from '@/api/user';
+import { querySocietiesType, createSocieties } from '@/api/societies';
 import * as checkRules from '@/utils/InfoRules';
 
 export default {
@@ -158,10 +203,12 @@ export default {
           ],
         },
       ],
+      // 登录信息
       loginInfo: {
         number: null,
         password: null,
       },
+      // 注册信息
       registeredInfo: {
         number: null,
         password: null,
@@ -169,6 +216,16 @@ export default {
         phone: null,
         classname: null,
       },
+      // 社团创建信息
+      societiesInfo: {
+        sname: '',
+        association: '',
+        founder: this.$store.state.userInfo.number,
+        instructor: '', // 指导老师
+        introduction: '', // 简历
+      },
+      // 社团类型
+      societiesType: [],
       LoginToRegistered: false,
       registeredRules: {
         number: [
@@ -222,6 +279,8 @@ export default {
         },
       );
     }
+
+    this.querySocietiesType();
   },
   methods: {
     /**
@@ -311,6 +370,34 @@ export default {
             this.$message.error('用户名或密码错误');
           }
         });
+    },
+
+    /**
+     * 创建社团
+     */
+    createSocieties() {
+      createSocieties(this.societiesInfo)
+        .then((res) => {
+          console.log(res);
+        });
+    },
+
+    /**
+     * 查看社团类型
+     */
+    querySocietiesType() {
+      querySocietiesType()
+        .then((res) => {
+          this.societiesType = res.data;
+        });
+    },
+
+    /**
+     * 重置表单
+     * @param formName
+     */
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
   },
 };

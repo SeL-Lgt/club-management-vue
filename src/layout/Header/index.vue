@@ -21,7 +21,6 @@ export default {
     return {};
   },
   created() {
-    console.log(this.$store.state.userInfo);
   },
   methods: {
     loginOut() {
