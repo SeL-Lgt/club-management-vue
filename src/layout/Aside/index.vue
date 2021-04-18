@@ -74,45 +74,19 @@ export default {
           icon: 'el-icon-s-order',
           index: '/basicInformation',
           title: '事务管理',
-          subs: [
-            {
-              index: 'customerData',
-              title: '客户资料',
-            },
-            {
-              index: 'productData',
-              title: '产品数据',
-            },
-            {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
-            },
-          ],
         },
         {
           icon: 'el-icon-s-order',
-          index: '/basicInformation',
+          index: '/clubManagement',
           title: '社团管理',
           subs: [
             {
-              index: 'customerData',
-              title: '客户资料',
+              index: 'member',
+              title: '查看社团成员',
             },
             {
-              index: 'productData',
-              title: '产品数据',
-            },
-            {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
+              index: 'info',
+              title: '查看社团信息',
             },
           ],
         },

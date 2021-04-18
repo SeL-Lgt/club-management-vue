@@ -8,7 +8,7 @@
         <div class="arrow arrow-three"></div>
       </div>
     </header>
-    <main v-show="isShow">
+    <main v-if="isShow">
       <div :id="'bg'+(index+1)"
            v-for="(item,index) in entrance"
            :key="index"
@@ -31,12 +31,12 @@
     <maskDemo v-if="event==1" ref="maskDemo">
       <template #content>
         <div class="league back">
-          <template v-for="(item,index) in league">
+          <template v-for="(item,index) in societiesType">
             <div class="main" :key="index">
-              <div class="title">{{ item.typeName }}</div>
+              <div class="title">{{ item.typename }}</div>
               <template v-for="(children,index2) in item.children">
-                <div class="label" :key="index2">
-                  {{ children.sName }}
+                <div class="label" :key="index2" @click="toDetail(children.id)">
+                  {{ children.sname }}
                 </div>
               </template>
             </div>
@@ -85,6 +85,14 @@
               </el-form-item>
             </el-form>
           </div>
+        </div>
+      </template>
+    </maskDemo>
+
+    <maskDemo v-if="event==3" ref="maskDemo">
+      <template #content>
+        <div class="activity back">
+          <MyTable/>
         </div>
       </template>
     </maskDemo>
@@ -150,6 +158,14 @@
         <div></div>
       </template>
     </maskDemo>
+
+    <societiesShow
+      v-if="isRouterShow"
+      style="position: relative;"
+      ref="societiesShow"
+      :id="societiesShowId"
+      :societiesType="societiesType"/>
+
   </div>
 </template>
 
@@ -160,19 +176,25 @@ import P3 from '@/assets/home/p3.jpg';
 import P4 from '@/assets/home/p4.jpg';
 
 import maskDemo from '@/components/maskDemo/index.vue';
+import societiesShow from '@/views/societiesShow/index.vue';
+import MyTable from '@/components/table/index.vue';
+
 import { login, registered } from '@/api/user';
-import { querySocietiesType, createSocieties } from '@/api/societies';
+import { querySocietiesType, createSocieties, querySocietiesByAll } from '@/api/societies';
 import * as checkRules from '@/utils/InfoRules';
 
 export default {
+  inject: ['reload'],
   name: 'Home',
   components: {
     maskDemo,
-
+    societiesShow,
+    MyTable,
   },
   data() {
     return {
       isShow: false,
+      isRouterShow: false,
       event: 0,
       // 导航栏数据
       entrance: [
@@ -191,18 +213,7 @@ export default {
         },
       ],
       // 社团数据
-      league: [
-        {
-          id: '',
-          typeName: '科技类',
-          children: [
-            {
-              id: '',
-              sName: '计算机社团',
-            },
-          ],
-        },
-      ],
+      league: [],
       // 登录信息
       loginInfo: {
         number: null,
@@ -225,7 +236,9 @@ export default {
         introduction: '', // 简历
       },
       // 社团类型
-      societiesType: [],
+      societiesType: [{
+        typename: '',
+      }],
       LoginToRegistered: false,
       registeredRules: {
         number: [
@@ -259,6 +272,8 @@ export default {
           },
         ],
       },
+
+      societiesShowId: 0,
     };
   },
   created() {
@@ -279,8 +294,6 @@ export default {
         },
       );
     }
-
-    this.querySocietiesType();
   },
   methods: {
     /**
@@ -303,8 +316,18 @@ export default {
      * @param index
      */
     cardEvent(index) {
-      console.log(index);
-      this.event = index;
+      if (index === 1 || index === 2) {
+        this.querySocieties();
+      }
+      if (index === 2 && sessionStorage.getItem('user') == null) {
+        this.event = 0;
+        this.$message({
+          message: '请先登录',
+          type: 'warning',
+        });
+      } else {
+        this.event = index;
+      }
       this.LoginToRegistered = false;// 恢复登录窗口
 
       this.$nextTick()
@@ -348,7 +371,8 @@ export default {
               message: '登录成功',
               type: 'success',
             });
-            this.$router.push('/backHome');
+            // this.$router.push('/backHome');
+            this.reload();
           } else {
             this.$message.error('用户名或密码错误');
           }
@@ -376,19 +400,46 @@ export default {
      * 创建社团
      */
     createSocieties() {
-      createSocieties(this.societiesInfo)
+      createSocieties({
+        ...this.societiesInfo,
+        uId: this.$store.state.userInfo.id,
+      })
         .then((res) => {
-          console.log(res);
+          if (res.code === 200) {
+            this.$message({
+              message: '创建成功',
+              type: 'success',
+            });
+            this.$refs.maskDemo.close();
+          } else {
+            this.$message.error('创建失败');
+          }
         });
     },
 
     /**
      * 查看社团类型
      */
-    querySocietiesType() {
-      querySocietiesType()
+    async querySocieties() {
+      await querySocietiesType()
         .then((res) => {
-          this.societiesType = res.data;
+          const nData = res.data.map((item) => ({
+            ...item,
+            children: [],
+          }));
+          this.societiesType = nData;
+        });
+      await querySocietiesByAll()
+        .then((res) => {
+          // eslint-disable-next-line array-callback-return
+          res.data.map((item) => {
+            // eslint-disable-next-line array-callback-return
+            this.societiesType.map((societiesType) => {
+              if (item.association === societiesType.id) {
+                societiesType.children.push(item);
+              }
+            });
+          });
         });
     },
 
@@ -398,6 +449,25 @@ export default {
      */
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+
+    /**
+     * 社团详情
+     */
+    toDetail(index) {
+      this.$refs.maskDemo.close();
+      this.isRouterShow = true;
+      this.societiesShowId = index;
+
+      const main = document.getElementsByTagName('main')[0];
+      const header = document.getElementsByTagName('header')[0];
+      this.$nextTick()
+        .then(() => {
+          window.scrollTo({
+            top: header.clientHeight + main.clientHeight,
+            behavior: 'smooth',
+          });
+        });
     },
   },
 };

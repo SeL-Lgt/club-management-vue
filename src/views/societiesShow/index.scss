@@ -1,0 +1,126 @@
+#societiesShow {
+  position: relative;
+  height: 90vh;
+  padding: 5vh 3vw;
+  display: flex;
+  justify-content: space-between;
+
+  .right {
+    width: 45vw;
+
+    .introduction {
+      margin-bottom: 5vh;
+
+      &_left {
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      &_right {
+        font-size: 1rem;
+      }
+    }
+
+    .activity {
+      .title {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .left {
+    width: 45vw;
+
+    .carousel {
+      margin-bottom: 5vh;
+
+      .el-carousel__item h3 {
+        color: #475669;
+        font-size: 14px;
+        opacity: 0.75;
+        line-height: 200px;
+        margin: 0;
+      }
+
+      .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+      }
+
+      .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
+      }
+    }
+
+    .info {
+      margin-bottom: 5vh;
+
+      .content {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+
+        .people, .time {
+          width: 50%;
+
+          .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2vh;
+          }
+
+          .value {
+            font-size: 1.2rem;
+            color: #3b3434;
+          }
+        }
+      }
+    }
+
+    .button {
+      width: 100%;
+      font-size: 1.5rem;
+    }
+  }
+
+  .return {
+    position: absolute;
+    right: 5vh;
+    bottom: 10vh;
+    width: 10vw;
+    text-align: right;
+
+    .el-image {
+      width: 50%;
+    }
+
+    &_hover {
+      animation: hover 4s infinite linear alternate forwards;
+      @keyframes hover {
+        0% {
+          transform: translateY(30%);
+        }
+        50% {
+          transform: translateY(-100%);
+        }
+        100% {
+          transform: translateY(30%);
+        }
+      }
+    }
+
+    &_active {
+      animation: active 1s linear alternate forwards;
+      @keyframes active {
+        from {
+          transform: translateY(0%);
+        }
+        to {
+          transform: translateY(-80vh);
+        }
+      }
+    }
+  }
+}

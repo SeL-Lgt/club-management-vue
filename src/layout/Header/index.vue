@@ -29,7 +29,7 @@ export default {
         type: 'success',
       });
       sessionStorage.clear();
-      this.$router.push('Home');
+      this.$router.push('/home');
     },
   },
 };

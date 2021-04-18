@@ -9,10 +9,62 @@ export function querySocietiesType() {
 }
 
 /**
+ * 查询职位类型
+ * @returns {Promise | Promise<unknown>}
+ */
+export function querySocietiesJobs() {
+  return axiosGetJson('/societies/getSocietiesJobs');
+}
+
+/**
  * 创建社团
  * @param params
  * @returns {Promise | Promise<unknown>}
  */
 export function createSocieties(params) {
   return axiosPostJson('/societies/createSocieties', params);
+}
+
+/**
+ * 查询所有社团
+ * @returns {Promise | Promise<unknown>}
+ */
+export function querySocietiesByAll() {
+  return axiosGetJson('/societies/getSocietiesByAll');
+}
+
+/**
+ * 查询单一社团信息
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function querySocietiesByCondition(params) {
+  return axiosGetJson('/societies/querySocietiesByCondition', params);
+}
+
+/**
+ * 添加社团成员
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function addSocietiesPersonnel(params) {
+  return axiosPostJson('/societiesPersonnel/addSocietiesPersonnel', params);
+}
+
+/**
+ * 查询社团成员
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function querySocietiesPersonnelByOne(params) {
+  return axiosPostJson('/societiesPersonnel/querySocietiesPersonnelByOne', params);
+}
+
+/**
+ * 退出社团
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function deleteSocietiesPersonnel(params) {
+  return axiosPostJson('/societiesPersonnel/deleteSocietiesPersonnel', params);
 }

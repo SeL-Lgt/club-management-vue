@@ -24,7 +24,7 @@
           <el-input v-model="registeredInfo.classname"/>
         </el-form-item>
       </el-form>
-      <Table :table-prop="tableProp"/>
+      <Table :tableProp="tableProp" :tableData="tableData"/>
     </el-col>
     <el-col :span="4" class="left">
       <el-image :src="Logo"/>
@@ -46,6 +46,7 @@ import * as checkRules from '@/utils/InfoRules';
 import Logo from '@/assets/logo.png';
 import Table from '@/components/table/index.vue';
 import { queryUserByNumber, updateUser } from '@/api/user';
+import { querySocietiesPersonnelByOne } from '@/api/societies';
 
 export default {
   name: 'UserInfo',
@@ -87,31 +88,36 @@ export default {
       registeredInfo: this.$store.state.userInfo,
       tableProp: [
         {
-          prop: 'name',
+          prop: 'sname',
           label: '社团名字',
         },
         {
-          prop: 'type',
+          prop: 'association',
           label: '社团类别',
         },
         {
-          prop: 'test',
+          prop: 'job',
           label: '社团职位',
         },
         {
-          prop: 'time',
+          prop: 'date',
           label: '加入时间',
         },
       ],
+      tableData: [],
       changer: true,
+      societiesType: [],
     };
   },
   created() {
+    this.queryUser();
   },
   methods: {
+    // 更新状态
     changerUserInfo() {
       this.changer = !this.changer;
     },
+    // 更新个人信息
     updateUserInfo() {
       this.changer = !this.changer;
       updateUser(this.registeredInfo)
@@ -119,13 +125,38 @@ export default {
           console.log(res);
         });
     },
+    // 重置个人信息
     reset() {
       this.changer = !this.changer;
       queryUserByNumber({ number: sessionStorage.getItem('user') })
         .then((res) => {
-          console.log(res);
           this.$store.commit('saveUserInfo', res.data);
           this.registeredInfo = this.$store.state.userInfo;
+        });
+    },
+
+    // 查看个人社团
+    queryUser() {
+      querySocietiesPersonnelByOne({
+        uid: this.$store.state.userInfo.id,
+      })
+
+        .then((res) => {
+          res.data.map((item) => {
+            const association = this.$store.state.societiesType
+              .filter((value) => value.id === item.societies.association)
+              .map((societiesType) => societiesType.typename);
+            const job = this.$store.state.societiesJobs
+              .filter((value) => value.id === item.job)
+              .map((societiesJobs) => societiesJobs.typename);
+            const temp = {
+              sname: item.societies.sname,
+              association,
+              job,
+              date: item.date.split(' ')[0],
+            };
+            return this.tableData.push(temp);
+          });
         });
     },
   },
