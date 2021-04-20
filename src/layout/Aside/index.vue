@@ -72,7 +72,7 @@ export default {
         },
         {
           icon: 'el-icon-s-order',
-          index: '/basicInformation',
+          index: '/affairs',
           title: '事务管理',
         },
         {

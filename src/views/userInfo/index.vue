@@ -140,7 +140,6 @@ export default {
       querySocietiesPersonnelByOne({
         uid: this.$store.state.userInfo.id,
       })
-
         .then((res) => {
           res.data.map((item) => {
             const association = this.$store.state.societiesType

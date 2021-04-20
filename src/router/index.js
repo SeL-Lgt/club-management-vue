@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import BackHome from '@/router/modules/backHome';
 import UserInfo from '@/router/modules/userInfo';
 import ClubManagement from '@/router/modules/clubManagement';
+import Affairs from '@/router/modules/affairs';
 
 Vue.use(VueRouter);
 
@@ -52,6 +53,7 @@ const routes = [
       BackHome,
       UserInfo,
       ClubManagement,
+      Affairs,
     ],
   },
 ];

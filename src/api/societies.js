@@ -61,10 +61,28 @@ export function querySocietiesPersonnelByOne(params) {
 }
 
 /**
+ * 模糊搜索社团成员
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function querySocietiesPersonnelByExample(params) {
+  return axiosPostJson('/societiesPersonnel/querySocietiesPersonnelByExample', params);
+}
+
+/**
  * 退出社团
  * @param params
  * @returns {Promise | Promise<unknown>}
  */
 export function deleteSocietiesPersonnel(params) {
   return axiosPostJson('/societiesPersonnel/deleteSocietiesPersonnel', params);
+}
+
+/**
+ * 修改社团信息
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function updateSocietiesInfo(params) {
+  return axiosPostJson('/societies/updateSocietiesInfo', params);
 }
