@@ -4,6 +4,7 @@ import BackHome from '@/router/modules/backHome';
 import UserInfo from '@/router/modules/userInfo';
 import ClubManagement from '@/router/modules/clubManagement';
 import Affairs from '@/router/modules/affairs';
+import Activity from '@/router/modules/activity';
 
 Vue.use(VueRouter);
 
@@ -54,6 +55,7 @@ const routes = [
       UserInfo,
       ClubManagement,
       Affairs,
+      Activity,
     ],
   },
 ];

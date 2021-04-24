@@ -202,6 +202,7 @@ export default {
         const data = {
           sid: this.id,
           uid: this.$store.state.userInfo.id,
+          name: this.$store.state.userInfo.name,
         };
         addSocietiesPersonnel(data)
           .then((res) => {

@@ -4,7 +4,7 @@ export default {
   path: '/affairs',
   name: 'Affairs',
   meta: {
-    title: '后台首页',
+    title: '事务管理',
   },
   component: Affairs,
   children: [],

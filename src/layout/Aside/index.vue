@@ -92,24 +92,20 @@ export default {
         },
         {
           icon: 'el-icon-s-order',
-          index: '/basicInformation',
+          index: '/activity',
           title: '活动管理',
           subs: [
             {
-              index: 'customerData',
-              title: '客户资料',
+              index: 'createActivity',
+              title: '创建社团活动',
             },
             {
-              index: 'productData',
-              title: '产品数据',
+              index: 'myActivity',
+              title: '查看我的活动',
             },
             {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
+              index: 'queryActivity',
+              title: '查看活动信息',
             },
           ],
         },
