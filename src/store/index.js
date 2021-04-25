@@ -9,6 +9,7 @@ export default new Vuex.Store({
     societiesType: [],
     societiesJobs: [],
     societiesPersonnel: [],
+    activityType: [],
   },
   mutations: {
     saveUserInfo(state, info) {
@@ -24,7 +25,16 @@ export default new Vuex.Store({
     saveSocietiesPersonnel(state, info) {
       state.societiesPersonnel = info;
     },
-
+    saveActivityType(state, info) {
+      state.activityType = info;
+    },
+    reset(state) {
+      state.userInfo = {};
+      state.activityType = {};
+      state.societiesPersonnel = {};
+      state.societiesJobs = {};
+      state.societiesType = {};
+    },
   },
   actions: {},
   modules: {},

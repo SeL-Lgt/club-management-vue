@@ -8,6 +8,7 @@
 import NProgress from 'nprogress';
 import { queryUserByNumber } from '@/api/user';
 import { querySocietiesType, querySocietiesJobs } from '@/api/societies';
+import { queryActivityTypeByAll } from '@/api/activity';
 
 export default {
   name: 'App',
@@ -32,9 +33,14 @@ export default {
       .then((res) => {
         this.$store.commit('saveSocietiesType', res.data);
       });
-    querySocietiesJobs().then((res) => {
-      this.$store.commit('saveSocietiesJobs', res.data);
-    });
+    querySocietiesJobs()
+      .then((res) => {
+        this.$store.commit('saveSocietiesJobs', res.data);
+      });
+    queryActivityTypeByAll()
+      .then((res) => {
+        this.$store.commit('saveActivityType', res.data);
+      });
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);

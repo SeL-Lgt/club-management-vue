@@ -219,6 +219,9 @@ $homeUrl: "~@/assets/home.jpg";
 
   .activity{
     width: 70vw;
+    ::-webkit-scrollbar{
+      display: block;
+    }
   }
 
   .societies {

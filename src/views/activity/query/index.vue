@@ -1,5 +1,5 @@
 <template>
-
+  <div id="ActivityQuery"></div>
 </template>
 
 <script>

@@ -4,9 +4,7 @@
       <Aside/>
       <el-container class="container">
         <Header/>
-        <Main>
-          <router-view></router-view>
-        </Main>
+        <Main/>
       </el-container>
     </el-container>
     <div class="bg"></div>

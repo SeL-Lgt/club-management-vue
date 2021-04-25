@@ -91,9 +91,21 @@
 
     <maskDemo v-if="event==3" ref="maskDemo">
       <template #content>
-        <div class="activity back">
-          <MyTable/>
-        </div>
+        <el-card class="activity back">
+          <MyTable :table-height="tableHeight" :table-prop="tableProp" :table-data="tableData">
+            <el-table-column
+              slot="operating"
+              prop="operating"
+              label="操作"
+              align="center"
+            >
+              <template v-slot="scope">
+                <el-button type="text" @click="addActivityPeople(scope.row)">参加活动</el-button>
+              </template>
+            </el-table-column>
+
+          </MyTable>
+        </el-card>
       </template>
     </maskDemo>
 
@@ -181,6 +193,7 @@ import MyTable from '@/components/table/index.vue';
 
 import { login, registered } from '@/api/user';
 import { querySocietiesType, createSocieties, querySocietiesByAll } from '@/api/societies';
+import { queryActivityByAll, addActivityPeople } from '@/api/activity';
 import * as checkRules from '@/utils/InfoRules';
 
 export default {
@@ -273,6 +286,39 @@ export default {
         ],
       },
 
+      // 活动列表
+      tableProp: [
+        {
+          prop: 'name',
+          label: '活动名字',
+        },
+        {
+          prop: 'type',
+          label: '活动类型',
+        },
+        {
+          prop: 'principal',
+          label: '负责人',
+        },
+        {
+          prop: 'location',
+          label: '活动地点',
+        },
+        {
+          prop: 'introduction',
+          label: '活动简介',
+        },
+        {
+          prop: 'starttime',
+          label: '开始时间',
+        },
+        {
+          prop: 'endtime',
+          label: '结束时间',
+        },
+      ],
+      tableData: [],
+      tableHeight: '500',
       societiesShowId: 0,
     };
   },
@@ -329,6 +375,10 @@ export default {
         this.event = index;
       }
       this.LoginToRegistered = false;// 恢复登录窗口
+
+      if (index === 3) {
+        this.queryActivity();
+      }
 
       this.$nextTick()
         .then(() => {
@@ -468,6 +518,75 @@ export default {
             behavior: 'smooth',
           });
         });
+    },
+
+    /**
+     * 查询活动列表
+     */
+    queryActivity() {
+      queryActivityByAll()
+        .then((res) => {
+          this.tableData = res.data.map((item) => {
+            const data = {
+              id: item.id,
+              name: '',
+              type: '',
+              principal: '',
+              location: '',
+              introduction: '',
+              starttime: '',
+              endtime: '',
+            };
+            data.name = item.name;
+            // eslint-disable-next-line array-callback-return,consistent-return
+            data.type = this.$store.state.activityType.filter((type) => {
+              if (type.id === item.type) {
+                return type;
+              }
+            })[0].typename;
+            data.principal = item.userinfo.name;
+            data.location = item.location;
+            data.introduction = item.introduction;
+            // eslint-disable-next-line prefer-destructuring
+            data.starttime = item.starttime.split(' ')[0];
+            // eslint-disable-next-line prefer-destructuring
+            data.endtime = item.endtime.split(' ')[0];
+            return data;
+          });
+        });
+    },
+
+    /**
+     * 参加活动
+     */
+    addActivityPeople(row) {
+      console.log(row);
+      if (this.$store.state.userInfo.id == null) {
+        this.$message({
+          message: '请先登录',
+          type: 'warning',
+        });
+      } else {
+        const data = {
+          id: row.id,
+          uid: this.$store.state.userInfo.id,
+          name: this.$store.state.userInfo.name,
+        };
+        addActivityPeople(data)
+          .then((res) => {
+            if (res.code === 200) {
+              this.$message({
+                message: '报名参加活动成功',
+                type: 'success',
+              });
+            } else {
+              this.$message({
+                message: '已报名参加活动',
+                type: 'warning',
+              });
+            }
+          });
+      }
     },
   },
 };

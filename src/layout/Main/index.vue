@@ -1,7 +1,7 @@
 <template>
   <div id="main">
-    <el-card style="height: 85vh">
-      <slot></slot>
+    <el-card style="height: 85vh;overflow: auto">
+      <router-view></router-view>
     </el-card>
   </div>
 </template>
@@ -12,6 +12,6 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import "index.scss";
 </style>
