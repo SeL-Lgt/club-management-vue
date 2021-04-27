@@ -111,26 +111,8 @@ export default {
         },
         {
           icon: 'el-icon-s-order',
-          index: '/basicInformation',
+          index: '/photo',
           title: '相册管理',
-          subs: [
-            {
-              index: 'customerData',
-              title: '客户资料',
-            },
-            {
-              index: 'productData',
-              title: '产品数据',
-            },
-            {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
-            },
-          ],
         },
         {
           icon: 'el-icon-s-order',
@@ -155,29 +137,29 @@ export default {
             },
           ],
         },
-        {
-          icon: 'el-icon-s-order',
-          index: '/basicInformation',
-          title: '前台界面管理',
-          subs: [
-            {
-              index: 'customerData',
-              title: '客户资料',
-            },
-            {
-              index: 'productData',
-              title: '产品数据',
-            },
-            {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
-            },
-          ],
-        },
+        // {
+        //   icon: 'el-icon-s-order',
+        //   index: '/basicInformation',
+        //   title: '前台界面管理',
+        //   subs: [
+        //     {
+        //       index: 'customerData',
+        //       title: '客户资料',
+        //     },
+        //     {
+        //       index: 'productData',
+        //       title: '产品数据',
+        //     },
+        //     {
+        //       index: 'purchaseData',
+        //       title: '采购数据',
+        //     },
+        //     {
+        //       index: 'supplierData',
+        //       title: '供应商数据',
+        //     },
+        //   ],
+        // },
       ],
     };
   },

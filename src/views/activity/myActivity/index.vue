@@ -8,7 +8,13 @@
         align="center"
       >
         <template v-slot="scope">
-          <el-button type="text" @click="deleteActivity(scope.row)">退出活动</el-button>
+          <el-button type="text" @click="quitActivity(scope.row)">退出活动</el-button>
+          <el-button v-if="scope.row.principalId===$store.state.userInfo.id"
+                     type="text"
+                     @click="deleteActivity(scope.row)"
+          >
+            删除活动
+          </el-button>
         </template>
       </el-table-column>
     </MyTable>
@@ -17,7 +23,7 @@
 
 <script>
 import MyTable from '@/components/table/index.vue';
-import { queryActivityByMy, deleteActivityPeople } from '@/api/activity';
+import { queryActivityByMy, deleteActivityPeople, deleteActivity } from '@/api/activity';
 
 export default {
   name: 'myActivity',
@@ -72,6 +78,7 @@ export default {
             name: '',
             type: '',
             principal: '',
+            principalId: '',
             location: '',
             introduction: '',
             starttime: '',
@@ -86,6 +93,7 @@ export default {
           })[0].typename;
 
           data.principal = item.userinfo.name;
+          data.principalId = item.userinfo.id;
           data.location = item.activity.location;
           data.introduction = item.activity.introduction;
           // eslint-disable-next-line prefer-destructuring
@@ -97,7 +105,8 @@ export default {
       });
   },
   methods: {
-    deleteActivity(row) {
+    // 退出活动
+    quitActivity(row) {
       deleteActivityPeople({
         id: row.id,
         uid: row.uid,
@@ -113,6 +122,23 @@ export default {
             this.$message.error('退出失败');
           }
         });
+    },
+
+    // 删除活动
+    deleteActivity(row) {
+      deleteActivity({
+        id: row.id,
+      }).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '删除活动成功',
+            type: 'success',
+          });
+          this.reload();
+        } else {
+          this.$message.error('删除失败');
+        }
+      });
     },
   },
 };

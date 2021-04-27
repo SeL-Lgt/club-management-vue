@@ -5,6 +5,7 @@ import UserInfo from '@/router/modules/userInfo';
 import ClubManagement from '@/router/modules/clubManagement';
 import Affairs from '@/router/modules/affairs';
 import Activity from '@/router/modules/activity';
+import Photo from '@/router/modules/photo';
 
 Vue.use(VueRouter);
 
@@ -33,16 +34,6 @@ const routes = [
           title: '首页',
         },
         component: Home,
-        // children: [
-        //   {
-        //     path: 'societiesShow/:id',
-        //     name: 'SocietiesShow',
-        //     meta: {
-        //       title: '社团详情',
-        //     },
-        //     component: SocietiesShow,
-        //   },
-        // ],
       },
     ],
   },
@@ -57,6 +48,7 @@ const routes = [
       ClubManagement,
       Affairs,
       Activity,
+      Photo,
     ],
   },
 ];

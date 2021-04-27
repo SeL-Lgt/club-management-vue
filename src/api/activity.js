@@ -22,8 +22,8 @@ export function deleteActivity(params) {
  * 查询所有活动
  * @returns {Promise | Promise<unknown>}
  */
-export function queryActivityByAll() {
-  return axiosGetJson('/activity/queryActivityByAll');
+export function queryActivityByAll(params) {
+  return axiosGetJson('/activity/queryActivityByAll', params);
 }
 
 /**

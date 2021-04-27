@@ -33,7 +33,7 @@
           <el-input v-model="form.instructor"/>
         </el-form-item>
         <el-form-item label="社团简介" prop="introduction">
-          <el-input type="textarea" v-model="form.introduction"/>
+          <el-input type="textarea" :rows="5" v-model="form.introduction"/>
         </el-form-item>
       </el-form>
     </el-col>

@@ -92,19 +92,7 @@
     <maskDemo v-if="event==3" ref="maskDemo">
       <template #content>
         <el-card class="activity back">
-          <MyTable :table-height="tableHeight" :table-prop="tableProp" :table-data="tableData">
-            <el-table-column
-              slot="operating"
-              prop="operating"
-              label="操作"
-              align="center"
-            >
-              <template v-slot="scope">
-                <el-button type="text" @click="addActivityPeople(scope.row)">参加活动</el-button>
-              </template>
-            </el-table-column>
-
-          </MyTable>
+          <activityQuery table-height="50vh"/>
         </el-card>
       </template>
     </maskDemo>
@@ -189,7 +177,7 @@ import P4 from '@/assets/home/p4.jpg';
 
 import maskDemo from '@/components/maskDemo/index.vue';
 import societiesShow from '@/views/societiesShow/index.vue';
-import MyTable from '@/components/table/index.vue';
+import activityQuery from '@/views/activity/query/index.vue';
 
 import { login, registered } from '@/api/user';
 import { querySocietiesType, createSocieties, querySocietiesByAll } from '@/api/societies';
@@ -202,7 +190,7 @@ export default {
   components: {
     maskDemo,
     societiesShow,
-    MyTable,
+    activityQuery,
   },
   data() {
     return {
