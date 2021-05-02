@@ -15,7 +15,7 @@
       </el-card>
       <el-card class="activity">
         <p class="title">社团活动</p>
-        <MyTable :tableProp="tableProp" :tableData="tableData"/>
+        <MyTable :tableProp="tableProp" :tableData="tableData" table-height="40vh"/>
       </el-card>
     </div>
     <div class="left">
@@ -41,7 +41,7 @@
 
       <el-row style="margin-bottom: 2vh">
         <el-button v-if="!joined" type="primary" class="button" @click="join()">加入社团</el-button>
-        <el-button v-else disabled class="button">已加入</el-button>
+        <el-button v-else disabled class="button">{{message}}</el-button>
       </el-row>
       <el-button v-if="quit"
                  type="danger"
@@ -68,6 +68,8 @@ import {
   querySocietiesPersonnelByOne,
   deleteSocietiesPersonnel,
 } from '@/api/societies';
+import * as DateUtil from '@/utils/DateUtil';
+import { queryActivityByAll } from '@/api/activity';
 
 export default {
   name: 'societiesShow',
@@ -87,6 +89,7 @@ export default {
       Logo,
       Rocket,
       typeName: '',
+      message: '',
       societiesData: {
         association: null,
         date: '',
@@ -105,23 +108,30 @@ export default {
         },
         {
           prop: 'type',
-          label: '活动类别',
+          label: '活动类型',
         },
         {
-          prop: 'test',
+          prop: 'principal',
+          label: '负责人',
+        },
+        {
+          prop: 'location',
+          label: '活动地点',
+        },
+        {
+          prop: 'introduction',
           label: '活动简介',
         },
-        {
-          prop: 'time',
-          label: '活动时间',
-        },
       ],
-      tableData: [{
-        name: 'xxx',
-        type: 'xxx',
-        test: 'xxx',
-        time: 'xxx-xxx-xx',
-      }],
+      tableData: [],
+      form: {
+        sid: this.id,
+        name: '', // 活动名字
+        type: '', // 活动类型
+        location: '', // 活动地址
+        starttime: '',
+        endtime: '',
+      },
       returnActive: false,
       joined: false,
       quit: false,
@@ -129,6 +139,7 @@ export default {
   },
   created() {
     this.getSocieties();
+    this.queryActivity();
   },
   watch: {
     id: {
@@ -154,7 +165,6 @@ export default {
           this.societiesData = res.data[0];
           this.typeName = this.societiesType[this.societiesData.association - 1].typename;
         });
-      console.log(this.$store.state.userInfo);
       if (this.$store.state.userInfo.id != null) {
         const data = {
           sid: this.id,
@@ -163,9 +173,13 @@ export default {
         querySocietiesPersonnelByOne(data)
           .then((res) => {
             if (res.data.length !== 0 && res.code === 200) {
-              console.log(200);
               this.joined = true;
               this.quit = true;
+              if (res.data[0].status === 1) {
+                this.message = '已加入';
+              } else {
+                this.message = '正在审核';
+              }
             } else {
               this.joined = false;
               this.quit = false;
@@ -211,6 +225,7 @@ export default {
                 message: '加入成功',
                 type: 'success',
               });
+              this.message = '正在审核';
               this.joined = true;
               this.quit = true;
             } else {
@@ -239,6 +254,51 @@ export default {
           } else {
             this.$message.error('退出失败');
           }
+        });
+    },
+
+    /**
+     * 查询活动列表
+     */
+    queryActivity() {
+      this.form.sid = this.id;
+      if (this.time != null && this.time.length > 0) {
+        this.form.starttime = DateUtil.formatDate(this.time[0], 3);
+        this.form.endtime = DateUtil.formatDate(this.time[1], 4);
+      } else {
+        this.form.starttime = '';
+        this.form.endtime = '';
+      }
+      queryActivityByAll(this.form)
+        .then((res) => {
+          this.tableData = res.data.map((item) => {
+            const data = {
+              id: item.id,
+              sName: item.societies.sname,
+              name: '',
+              type: '',
+              principal: '',
+              location: '',
+              introduction: '',
+              starttime: '',
+              endtime: '',
+            };
+            data.name = item.name;
+            // eslint-disable-next-line array-callback-return,consistent-return
+            data.type = this.$store.state.activityType.filter((type) => {
+              if (type.id === item.type) {
+                return type;
+              }
+            })[0].typename;
+            data.principal = item.userinfo.name;
+            data.location = item.location;
+            data.introduction = item.introduction;
+            // eslint-disable-next-line prefer-destructuring
+            data.starttime = item.starttime.split(' ')[0];
+            // eslint-disable-next-line prefer-destructuring
+            data.endtime = item.endtime.split(' ')[0];
+            return data;
+          });
         });
     },
   },

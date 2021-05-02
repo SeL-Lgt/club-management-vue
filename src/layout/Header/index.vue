@@ -1,6 +1,25 @@
 <template>
   <el-header id="header" style="height: 10vh">
-    <i class="icon el-icon-s-fold"></i>
+    <el-row class="left">
+      <i class="icon el-icon-s-fold"></i>
+      <el-dropdown v-if="show">
+        <div class="name">
+          <span>
+            当前选择社团：
+            {{ $store.state.nowSocieties.association + $store.state.nowSocieties.sname }}
+          </span>
+          <i class="el-icon-caret-bottom"/>
+        </div>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="(item,index) in societies"
+                            :key="index"
+                            @click.native="nowSocieties(item)">
+            {{ item.association + item.sname }}
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </el-row>
+
     <el-dropdown>
       <div class="name">
         <span>{{ $store.state.userInfo.name }}</span>
@@ -18,11 +37,50 @@
 export default {
   name: 'Header',
   data() {
-    return {};
+    return {
+      sid: '',
+      societies: [],
+      show: false,
+    };
   },
   created() {
+    if (this.$store.state.societiesPersonnel.length > 0) {
+      this.show = true;
+      this.getSelect();
+    } else {
+      this.show = false;
+    }
   },
   methods: {
+    /**
+     * 获取所属社团
+     */
+    getSelect() {
+      this.societies = this.$store.state.societiesPersonnel.map((item) => {
+        const temp = {
+          job: item.job,
+          sid: item.sid,
+          association: '',
+          sname: item.societies.sname,
+        };
+        temp.association = this.$store.state.societiesType
+          // eslint-disable-next-line no-shadow
+          .filter((value) => value.id === item.societies.association)
+          // eslint-disable-next-line no-shadow
+          .map((item) => item.typename);
+        return temp;
+      });
+      this.$store.commit('saveNowSocieties', this.societies[0]);
+    },
+    /**
+     * 存储当前社团信息
+     */
+    nowSocieties(societies) {
+      this.$store.commit('saveNowSocieties', societies);
+    },
+    /**
+     * 退出登录
+     */
     loginOut() {
       this.$message({
         message: '退出成功',

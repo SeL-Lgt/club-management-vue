@@ -73,6 +73,10 @@ export default {
           label: '活动类型',
         },
         {
+          prop: 'sName',
+          label: '归属社团',
+        },
+        {
           prop: 'principal',
           label: '负责人',
         },
@@ -125,6 +129,7 @@ export default {
           this.tableData = res.data.map((item) => {
             const data = {
               id: item.id,
+              sName: item.societies.sname,
               name: '',
               type: '',
               principal: '',
@@ -156,7 +161,6 @@ export default {
      * 参加活动
      */
     addActivityPeople(row) {
-      console.log(row);
       if (this.$store.state.userInfo.id == null) {
         this.$message({
           message: '请先登录',

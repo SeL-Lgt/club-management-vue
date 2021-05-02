@@ -1,32 +1,32 @@
 <template id="table">
   <el-table
-      v-if="tableHeight!==''"
-      :data="tableData"
-      stripe
-      :height="tableHeight"
+    v-if="tableHeight!==''"
+    :data="tableData"
+    stripe
+    :height="tableHeight"
   >
     <el-table-column
-        v-for="(item,index) in tableProp"
-        :key="index"
-        :prop="item.prop"
-        :label="item.label"
-        :width="item.width"
-        align="center"
+      v-for="(item,index) in tableProp"
+      :key="index"
+      :prop="item.prop"
+      :label="item.label"
+      :width="item.width"
+      align="center"
     />
     <slot name="operating"/>
   </el-table>
   <el-table
-      v-else
-      :data="tableData"
-      stripe
+    v-else
+    :data="tableData"
+    stripe
   >
     <el-table-column
-        v-for="(item,index) in tableProp"
-        :key="index"
-        :prop="item.prop"
-        :label="item.label"
-        :width="item.width"
-        align="center"
+      v-for="(item,index) in tableProp"
+      :key="index"
+      :prop="item.prop"
+      :label="item.label"
+      :width="item.width"
+      align="center"
     />
     <slot name="operating"/>
   </el-table>
@@ -56,6 +56,5 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 </style>

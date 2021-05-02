@@ -548,7 +548,6 @@ export default {
      * 参加活动
      */
     addActivityPeople(row) {
-      console.log(row);
       if (this.$store.state.userInfo.id == null) {
         this.$message({
           message: '请先登录',

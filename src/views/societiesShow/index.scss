@@ -5,6 +5,10 @@
   display: flex;
   justify-content: space-between;
 
+  ::-webkit-scrollbar {
+    display: block;
+  }
+
   .right {
     width: 45vw;
 

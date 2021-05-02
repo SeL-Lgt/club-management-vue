@@ -86,3 +86,12 @@ export function deleteSocietiesPersonnel(params) {
 export function updateSocietiesInfo(params) {
   return axiosPostJson('/societies/updateSocietiesInfo', params);
 }
+
+/**
+ * 查询社团所有成员
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function querySocietiesPersonnelAll(params) {
+  return axiosPostJson('/societiesPersonnel/querySocietiesPersonnelAll', params);
+}

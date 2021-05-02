@@ -120,9 +120,25 @@ export default {
     // 更新个人信息
     updateUserInfo() {
       this.changer = !this.changer;
-      updateUser(this.registeredInfo)
+      const userInfo = {
+        classname: this.registeredInfo.classname,
+        id: this.registeredInfo.id,
+        name: this.registeredInfo.name,
+        number: this.registeredInfo.number,
+        password: this.registeredInfo.password,
+        phone: this.registeredInfo.phone,
+        type: this.registeredInfo.type,
+      };
+      updateUser(userInfo)
         .then((res) => {
-          console.log(res);
+          if (res.code === 200) {
+            this.$message({
+              message: '更新成功',
+              type: 'success',
+            });
+          } else {
+            this.$message.error('更新失败');
+          }
         });
     },
     // 重置个人信息
@@ -139,6 +155,7 @@ export default {
     queryUser() {
       querySocietiesPersonnelByOne({
         uid: this.$store.state.userInfo.id,
+        status: 1,
       })
         .then((res) => {
           res.data.map((item) => {

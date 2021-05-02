@@ -123,7 +123,6 @@ export default {
         return temp;
       });
       this.form.sid = this.societies[0].sid;
-      console.log(this.$store.state.activityType);
     },
     /**
      * 重置

@@ -74,6 +74,16 @@ export default {
           icon: 'el-icon-s-order',
           index: '/affairs',
           title: '事务管理',
+          subs: [
+            {
+              index: 'myAffairs',
+              title: '个人事务管理',
+            },
+            {
+              index: 'allAffairs',
+              title: '社团事务管理',
+            },
+          ],
         },
         {
           icon: 'el-icon-s-order',
