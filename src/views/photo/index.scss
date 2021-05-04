@@ -1,0 +1,43 @@
+.top {
+  .el-form {
+    display: flex;
+
+    ::v-deep .el-form-item {
+      display: flex;
+      white-space: nowrap;
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .el-range-editor.el-input__inner {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.el-row {
+  margin-bottom: 10px;
+
+  &:last-child,
+  &:first-child,
+  {
+    margin-bottom: 0;
+  }
+}
+
+.photoInfo {
+  .photoName {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .author{
+    font-size: 0.9rem;
+  }
+  .time{
+    font-size: 0.8rem;
+    color:#909399;
+  }
+}

@@ -2,17 +2,8 @@
   <el-row id="photo">
     <el-row class="top">
       <el-form>
-        <el-form-item label="当前社团" prop="sid">
-          <el-select v-model="form.sid" placeholder="所属社团">
-            <el-option v-for="(item,index) in societies"
-                       :key="index"
-                       :label="item.association+item.sname"
-                       :value="item.sid"
-            />
-          </el-select>
-        </el-form-item>
         <el-form-item label="照片名字" prop="name">
-          <el-input v-model="form.name" clearable disabled/>
+          <el-input v-model="form.name" clearable/>
         </el-form-item>
         <el-form-item label="照片日期" prop="date">
           <el-date-picker
@@ -29,7 +20,23 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-button type="primary" @click="dialogVisible=true">上传相册</el-button>
+    <el-row>
+      <el-button type="primary" @click="dialogVisible=true">上传相册</el-button>
+    </el-row>
+    <el-row>
+      <el-col v-for="(item,index) in photoList" :key="index" :span="3">
+        <el-card>
+          <el-image :src=url+item.path />
+            <div class="photoInfo">
+              <div class="photoName">{{ item.name }}</div>
+              <div class="author">
+                ssss
+              </div>
+              <div class="time">123123</div>
+            </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
     <el-dialog title="上传相册"
                :visible.sync="dialogVisible"
@@ -98,13 +105,14 @@
 
 <script>
 import { getBase64 } from '@/utils/ImageUtil';
-import { saveImage } from '@/api/photo';
+import { saveImage, queryPhotoByAll } from '@/api/photo';
 
 export default {
   name: 'Photo',
   inject: ['reload'],
   data() {
     return {
+      url: 'http://localhost:9090/image/',
       form: {
         sid: '',
         name: '',
@@ -126,10 +134,12 @@ export default {
       fileList: [],
       imageShow: false,
       imageUrl: '',
+      photoList: [],
     };
   },
   created() {
     this.getSelect();
+    this.queryPhotoByAll();
   },
   methods: {
     /**
@@ -157,13 +167,16 @@ export default {
       console.log('查询照片');
     },
 
+    // 预览图片
     handlePictureCardPreview(file) {
       this.imageShow = true;
       this.imageUrl = file.url;
     },
+    // 移除图片
     handleRemove(file) {
       this.$refs.upload.handleRemove(file);
     },
+    // 上传图片
     createPhoto() {
       const temp = this.dialogForm;
 
@@ -193,28 +206,20 @@ export default {
       this.$refs.dialogForm.resetFields();
       this.$refs.upload.uploadFiles = [];
     },
+
+    /**
+     * 查询社团照片
+     */
+    queryPhotoByAll() {
+      queryPhotoByAll({ sid: this.$store.state.nowSocieties.sid })
+        .then((res) => {
+          this.photoList = res.data;
+        });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.top {
-  .el-form {
-    display: flex;
-
-    ::v-deep .el-form-item {
-      display: flex;
-      white-space: nowrap;
-      margin-right: 10px;
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      .el-range-editor.el-input__inner {
-        width: 100%;
-      }
-    }
-  }
-}
+@import "index";
 </style>
