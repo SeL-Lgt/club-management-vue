@@ -34,7 +34,7 @@
     <MyTable :table-prop="tableProp" :table-data="tableData"/>
 
     <!--  创建任务  -->
-    <el-dialog title="发布任务" :visible.sync="dialogVisible">
+    <el-dialog title="发布任务" width="40%" :visible.sync="dialogVisible">
       <el-form class="taskForm" ref="taskForm" :model="taskForm" label-width="15%">
         <el-form-item label="任务名字" prop="name">
           <el-input v-model="taskForm.name" clearable/>
