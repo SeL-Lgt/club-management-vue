@@ -95,3 +95,12 @@ export function updateSocietiesInfo(params) {
 export function querySocietiesPersonnelAll(params) {
   return axiosPostJson('/societiesPersonnel/querySocietiesPersonnelAll', params);
 }
+
+/**
+ * 获取社长信息
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function getPresident(params) {
+  return axiosPostJson('/societiesPersonnel/getPresident', params);
+}

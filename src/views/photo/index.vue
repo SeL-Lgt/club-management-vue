@@ -23,21 +23,15 @@
     <el-row>
       <el-button type="primary" @click="dialogVisible=true">上传相册</el-button>
     </el-row>
-    <el-row>
-      <el-col v-for="(item,index) in photoList" :key="index" :span="3">
-        <el-card>
-          <el-image :src=url+item.path />
-            <div class="photoInfo">
-              <div class="photoName">{{ item.name }}</div>
-              <div class="author">
-                ssss
-              </div>
-              <div class="time">123123</div>
-            </div>
-        </el-card>
-      </el-col>
-    </el-row>
-
+    <div class="container">
+      <el-card
+        v-for="(item, index) in photoList" :key="index"
+        @click.native="photoDetail(item)"
+        class="box"
+      >
+        <img style="width: 100%" :src="url+item.path" alt="">
+      </el-card>
+    </div>
     <el-dialog title="上传相册"
                :visible.sync="dialogVisible"
                width="50%"
@@ -53,10 +47,16 @@
           {{ $store.state.userInfo.name }}
         </el-form-item>
         <el-form-item label="展示社团首页" prop="name">
-          <el-input v-model="dialogForm.status" clearable/>
+          <el-switch
+            v-model="dialogForm.status"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-value="1"
+            inactive-value="0">
+          </el-switch>
         </el-form-item>
         <el-form-item label="照片简介" prop="name">
-          <el-input v-model="dialogForm.introduction" clearable/>
+          <el-input type="textarea" v-model="dialogForm.introduction" clearable/>
         </el-form-item>
         <el-form-item prop="image" label="图片附件上传">
           <el-upload
@@ -90,7 +90,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="createPhoto()">发布任务</el-button>
+          <el-button type="primary" @click="createPhoto()">上传照片</el-button>
           <el-button @click="resetForm()">重置</el-button>
         </el-form-item>
       </el-form>
@@ -100,12 +100,65 @@
       </el-dialog>
 
     </el-dialog>
+    <el-dialog title="查看照片详情"
+               :visible.sync="dialogDetail"
+               width="50%"
+    >
+      <el-card>
+        <el-row type="flex" justify="space-between" align="middle" :gutter="20">
+          <el-col :span="12">
+            <img style="width: 100%;max-height: 50vh" :src="url+dialogDetailForm.path"/>
+          </el-col>
+          <el-col :span="12">
+            <el-form label-width="30%">
+              <el-form-item label="照片名字" prop="name">
+                <el-input v-model="dialogDetailForm.name" clearable/>
+              </el-form-item>
+              <el-form-item label="归属社团" prop="sid">
+                {{ $store.state.nowSocieties.association[0] }}-{{ $store.state.nowSocieties.sname }}
+              </el-form-item>
+              <el-form-item label="上传者" prop="uid">
+                {{ dialogDetailForm.userinfo.name }}
+              </el-form-item>
+              <el-form-item label="上传时间" prop="date">
+                {{ dialogDetailForm.date.split(' ')[0] }}
+              </el-form-item>
+              <el-form-item label="展示社团首页" prop="status">
+                <el-switch
+                  v-model="dialogDetailForm.status"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  active-value="1"
+                  inactive-value="0">
+                </el-switch>
+              </el-form-item>
+              <el-form-item label="照片简介" prop="introduction">
+                <el-input type="textarea" v-model="dialogDetailForm.introduction" clearable/>
+              </el-form-item>
+              <el-form-item>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-button type="primary" @click="updatePhoto()">更新照片</el-button>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-button type="danger" @click="deletePhoto()">删除照片</el-button>
+                  </el-col>
+                </el-row>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-dialog>
   </el-row>
 </template>
 
 <script>
 import { getBase64 } from '@/utils/ImageUtil';
-import { saveImage, queryPhotoByAll } from '@/api/photo';
+import {
+  saveImage, queryPhotoByAll, updatePhoto, deletePhoto, queryPhotoByExample,
+} from '@/api/photo';
+import * as DateUtil from '@/utils/DateUtil';
 
 export default {
   name: 'Photo',
@@ -114,10 +167,11 @@ export default {
     return {
       url: 'http://localhost:9090/image/',
       form: {
-        sid: '',
+        sid: this.$store.state.nowSocieties.sid,
         name: '',
-        starttime: '',
-        endtime: '',
+        startTime: '',
+        endTime: '',
+        status: '',
       },
       societies: [],
       time: [],
@@ -135,38 +189,25 @@ export default {
       imageShow: false,
       imageUrl: '',
       photoList: [],
+      dialogDetail: false,
+      dialogDetailForm: {
+        date: '',
+        image: '',
+        introduction: '', // 简介
+        name: '', // 相册名字
+        uid: '', // 上传人
+        sid: this.$store.state.nowSocieties.sid, // 社团
+        status: '', // 是否展示首页
+        userinfo: {
+          name: '',
+        },
+      },
     };
   },
   created() {
-    this.getSelect();
     this.queryPhotoByAll();
   },
   methods: {
-    /**
-     * 获取所属社团
-     */
-    getSelect() {
-      this.societies = this.$store.state.societiesPersonnel.map((item) => {
-        const temp = {
-          job: item.job,
-          sid: item.sid,
-          association: '',
-          sname: item.societies.sname,
-        };
-        temp.association = this.$store.state.societiesType
-          // eslint-disable-next-line no-shadow
-          .filter((value) => value.id === item.societies.association)
-          // eslint-disable-next-line no-shadow
-          .map((item) => item.typename);
-        return temp;
-      });
-      this.form.sid = this.societies[0].sid;
-    },
-
-    onSubmit() {
-      console.log('查询照片');
-    },
-
     // 预览图片
     handlePictureCardPreview(file) {
       this.imageShow = true;
@@ -212,6 +253,78 @@ export default {
      */
     queryPhotoByAll() {
       queryPhotoByAll({ sid: this.$store.state.nowSocieties.sid })
+        .then((res) => {
+          this.photoList = res.data;
+        });
+    },
+    /**
+     * 照片详情
+     * @param item
+     */
+    photoDetail(item) {
+      this.dialogDetail = true;
+      this.dialogDetailForm = item;
+      console.log(item);
+    },
+
+    /**
+     * 更新照片
+     */
+    updatePhoto() {
+      const form = {
+        id: this.dialogDetailForm.id,
+        date: this.dialogDetailForm.date,
+        path: this.dialogDetailForm.path,
+        introduction: this.dialogDetailForm.introduction, // 简介
+        name: this.dialogDetailForm.name, // 相册名字
+        uid: this.dialogDetailForm.uid, // 上传人
+        sid: this.$store.state.nowSocieties.sid, // 社团
+        status: this.dialogDetailForm.status, // 是否展示首页
+      };
+      updatePhoto(form)
+        .then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              message: '更新成功',
+              type: 'success',
+            });
+            this.reload();
+          } else {
+            this.$message.error('更新失败');
+          }
+        });
+    },
+
+    /**
+     * 删除照片
+     */
+    deletePhoto() {
+      deletePhoto({ id: this.dialogDetailForm.id })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+            });
+            this.reload();
+          } else {
+            this.$message.error('删除失败');
+          }
+        });
+    },
+
+    /**
+     * 模糊查询
+     */
+    onSubmit() {
+      if (this.time != null && this.time.length > 0) {
+        this.form.startTime = DateUtil.formatDate(this.time[0], 3);
+        this.form.endTime = DateUtil.formatDate(this.time[1], 4);
+      } else {
+        this.form.startTime = '';
+        this.form.endTime = '';
+      }
+      queryPhotoByExample(this.form)
         .then((res) => {
           this.photoList = res.data;
         });

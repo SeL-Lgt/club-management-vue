@@ -6,6 +6,7 @@ import ClubManagement from '@/router/modules/clubManagement';
 import Affairs from '@/router/modules/affairs';
 import Activity from '@/router/modules/activity';
 import Photo from '@/router/modules/photo';
+import Funding from '@/router/modules/funding';
 
 Vue.use(VueRouter);
 
@@ -49,6 +50,7 @@ const routes = [
       Affairs,
       Activity,
       Photo,
+      Funding,
     ],
   },
 ];

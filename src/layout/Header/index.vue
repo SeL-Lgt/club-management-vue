@@ -1,7 +1,7 @@
 <template>
   <el-header id="header" style="height: 10vh">
     <el-row class="left">
-      <i class="icon el-icon-s-fold"></i>
+      <!--      <i class="icon el-icon-s-fold"></i>-->
       <el-dropdown v-if="show">
         <div class="name">
           <span>
@@ -13,7 +13,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="(item,index) in societies"
                             :key="index"
-                            @click.native="nowSocieties(item)">
+                            @click.native="nowSocieties(item,index)">
             {{ item.association + item.sname }}
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -36,12 +36,22 @@
 <script>
 export default {
   name: 'Header',
+  inject: ['reload'],
   data() {
     return {
-      sid: '',
+      sid: this.$store.state.nowSocieties.sid,
       societies: [],
       show: false,
     };
+  },
+  watch: {
+    sid: {
+      handler() {
+        this.$nextTick(() => {
+          this.reload();
+        });
+      },
+    },
   },
   created() {
     if (this.$store.state.societiesPersonnel.length > 0) {
@@ -56,27 +66,37 @@ export default {
      * 获取所属社团
      */
     getSelect() {
-      this.societies = this.$store.state.societiesPersonnel.map((item) => {
-        const temp = {
-          job: item.job,
-          sid: item.sid,
-          association: '',
-          sname: item.societies.sname,
-        };
-        temp.association = this.$store.state.societiesType
-          // eslint-disable-next-line no-shadow
-          .filter((value) => value.id === item.societies.association)
-          // eslint-disable-next-line no-shadow
-          .map((item) => item.typename);
-        return temp;
-      });
-      this.$store.commit('saveNowSocieties', this.societies[0]);
+      this.societies = this.$store.state.societiesPersonnel
+        .filter((item) => item.status === 1)
+        .map((item) => {
+          const temp = {
+            job: item.job,
+            sid: item.sid,
+            association: '',
+            sname: item.societies.sname,
+          };
+          temp.association = this.$store.state.societiesType
+            // eslint-disable-next-line no-shadow
+            .filter((value) => value.id === item.societies.association)
+            // eslint-disable-next-line no-shadow
+            .map((item) => item.typename);
+          return temp;
+        });
+      if (sessionStorage.getItem('index') == null) {
+        this.$store.commit('saveNowSocieties', this.societies[0]);
+        sessionStorage.setItem('index', '0');
+      } else {
+        this.$store.commit('saveNowSocieties', this.societies[sessionStorage.getItem('index')]);
+      }
     },
     /**
      * 存储当前社团信息
      */
-    nowSocieties(societies) {
+    nowSocieties(societies, index) {
       this.$store.commit('saveNowSocieties', societies);
+      this.sid = societies.sid;
+      sessionStorage.setItem('index', index);
+      this.$router.push('/backHome');
     },
     /**
      * 退出登录

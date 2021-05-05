@@ -59,119 +59,305 @@ export default {
   name: 'Aside',
   data() {
     return {
-      items: [
-        {
-          icon: 'el-icon-s-home',
-          index: '/backstage',
-          title: '系统首页',
-        },
-        {
-          icon: 'el-icon-s-order',
-          index: '/userInfo',
-          title: '个人信息管理',
-        },
-        {
-          icon: 'el-icon-s-order',
-          index: '/affairs',
-          title: '事务管理',
-          subs: [
-            {
-              index: 'myAffairs',
-              title: '个人事务管理',
-            },
-            {
-              index: 'allAffairs',
-              title: '社团事务管理',
-            },
-          ],
-        },
-        {
-          icon: 'el-icon-s-order',
-          index: '/clubManagement',
-          title: '社团管理',
-          subs: [
-            {
-              index: 'member',
-              title: '查看社团成员',
-            },
-            {
-              index: 'info',
-              title: '查看社团信息',
-            },
-          ],
-        },
-        {
-          icon: 'el-icon-s-order',
-          index: '/activity',
-          title: '活动管理',
-          subs: [
-            {
-              index: 'createActivity',
-              title: '创建社团活动',
-            },
-            {
-              index: 'myActivity',
-              title: '查看我的活动',
-            },
-            {
-              index: 'queryActivity',
-              title: '查看活动信息',
-            },
-          ],
-        },
-        {
-          icon: 'el-icon-s-order',
-          index: '/photo',
-          title: '相册管理',
-        },
-        {
-          icon: 'el-icon-s-order',
-          index: '/basicInformation',
-          title: '经费管理',
-          subs: [
-            {
-              index: 'customerData',
-              title: '客户资料',
-            },
-            {
-              index: 'productData',
-              title: '产品数据',
-            },
-            {
-              index: 'purchaseData',
-              title: '采购数据',
-            },
-            {
-              index: 'supplierData',
-              title: '供应商数据',
-            },
-          ],
-        },
-        // {
-        //   icon: 'el-icon-s-order',
-        //   index: '/basicInformation',
-        //   title: '前台界面管理',
-        //   subs: [
-        //     {
-        //       index: 'customerData',
-        //       title: '客户资料',
-        //     },
-        //     {
-        //       index: 'productData',
-        //       title: '产品数据',
-        //     },
-        //     {
-        //       index: 'purchaseData',
-        //       title: '采购数据',
-        //     },
-        //     {
-        //       index: 'supplierData',
-        //       title: '供应商数据',
-        //     },
-        //   ],
-        // },
-      ],
+      items: [],
+      job: this.$store.state.nowSocieties.job || this.$store.state.userInfo.type === 2 ? 4 : 0,
     };
+  },
+  mounted() {
+    if (this.$store.state.nowSocieties != null) {
+      this.getMenu(this.$store.state.nowSocieties.job);
+    } else {
+      this.getMenu(this.$store.state.userInfo.type === 2 ? 4 : 0);
+    }
+  },
+  watch: {
+    job: {
+      handler() {
+        this.$nextTick(() => {
+          this.getMenu(this.job);
+        });
+      },
+    },
+  },
+  methods: {
+    getMenu(index) {
+      switch (index) {
+        case 1: {
+          this.items = [
+            {
+              icon: 'el-icon-s-home',
+              index: '/backstage',
+              title: '系统首页',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/userInfo',
+              title: '个人信息管理',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/affairs',
+              title: '事务管理',
+              subs: [
+                {
+                  index: 'myAffairs',
+                  title: '个人事务管理',
+                },
+                {
+                  index: 'allAffairs',
+                  title: '社团事务管理',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/clubManagement',
+              title: '社团管理',
+              subs: [
+                {
+                  index: 'member',
+                  title: '查看社团成员',
+                },
+                {
+                  index: 'info',
+                  title: '查看社团信息',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/activity',
+              title: '活动管理',
+              subs: [
+                {
+                  index: 'myActivity',
+                  title: '查看我的活动',
+                },
+                {
+                  index: 'queryActivity',
+                  title: '查看活动信息',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/photo',
+              title: '相册管理',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/funding',
+              title: '经费管理',
+              subs: [
+                {
+                  index: 'createFunding',
+                  title: '申请经费',
+                },
+                {
+                  index: 'processFunding',
+                  title: '经费分配',
+                },
+                {
+                  index: 'selectFunding',
+                  title: '经费查询',
+                },
+              ],
+            }];
+          break;
+        }
+        case 2:
+        case 3: {
+          this.items = [
+            {
+              icon: 'el-icon-s-home',
+              index: '/backstage',
+              title: '系统首页',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/userInfo',
+              title: '个人信息管理',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/affairs',
+              title: '事务管理',
+              subs: [
+                {
+                  index: 'myAffairs',
+                  title: '个人事务管理',
+                },
+                {
+                  index: 'allAffairs',
+                  title: '社团事务管理',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/clubManagement',
+              title: '社团管理',
+              subs: [
+                {
+                  index: 'member',
+                  title: '查看社团成员',
+                },
+                {
+                  index: 'info',
+                  title: '查看社团信息',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/activity',
+              title: '活动管理',
+              subs: [
+                {
+                  index: 'createActivity',
+                  title: '创建社团活动',
+                },
+                {
+                  index: 'myActivity',
+                  title: '查看我的活动',
+                },
+                {
+                  index: 'queryActivity',
+                  title: '查看活动信息',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/photo',
+              title: '相册管理',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/funding',
+              title: '经费管理',
+              subs: [
+                {
+                  index: 'createFunding',
+                  title: '申请经费',
+                },
+                {
+                  index: 'processFunding',
+                  title: '经费分配',
+                },
+                {
+                  index: 'selectFunding',
+                  title: '经费查询',
+                },
+              ],
+            }];
+          break;
+        }
+        case 4: {
+          this.items = [
+            {
+              icon: 'el-icon-s-order',
+              index: '/userInfo',
+              title: '个人信息管理',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/affairs',
+              title: '事务管理',
+              subs: [
+                {
+                  index: 'myAffairs',
+                  title: '个人事务管理',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/clubManagement',
+              title: '社团管理',
+              subs: [
+                {
+                  index: 'member',
+                  title: '查看社团成员',
+                },
+                {
+                  index: 'info',
+                  title: '查看社团信息',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/activity',
+              title: '活动管理',
+              subs: [
+                {
+                  index: 'myActivity',
+                  title: '查看我的活动',
+                },
+                {
+                  index: 'queryActivity',
+                  title: '查看活动信息',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/funding',
+              title: '经费管理',
+              subs: [
+                // {
+                //   index: 'createFunding',
+                //   title: '申请经费',
+                // },
+                {
+                  index: 'processFunding',
+                  title: '经费分配',
+                },
+                {
+                  index: 'selectFunding',
+                  title: '经费查询',
+                },
+              ],
+            }];
+          break;
+        }
+        default: {
+          this.items = [
+            {
+              icon: 'el-icon-s-order',
+              index: '/userInfo',
+              title: '个人信息管理',
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/affairs',
+              title: '事务管理',
+              subs: [
+                {
+                  index: 'myAffairs',
+                  title: '个人事务管理',
+                },
+              ],
+            },
+            {
+              icon: 'el-icon-s-order',
+              index: '/activity',
+              title: '活动管理',
+              subs: [
+                {
+                  index: 'myActivity',
+                  title: '查看我的活动',
+                },
+                {
+                  index: 'queryActivity',
+                  title: '查看活动信息',
+                },
+              ],
+            }];
+        }
+      }
+    },
   },
 };
 </script>

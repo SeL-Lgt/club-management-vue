@@ -21,9 +21,18 @@
     <div class="left">
       <el-card class="carousel">
         <el-carousel :interval="4000" type="card" height="25vh">
-          <el-carousel-item v-for="item in 6" :key="item">
-            <h3 class="medium">{{ item }}</h3>
-          </el-carousel-item>
+          <template v-if="photoList.length>0">
+            <el-carousel-item v-for="(item,index) in photoList" :key="index">
+              <el-image style="height: 100%"
+                        fit="contain" :src="url+item.path"
+                        :preview-src-list="list"/>
+            </el-carousel-item>
+          </template>
+          <template v-else>
+            <el-carousel-item>
+              <h3>暂无社团照片</h3>
+            </el-carousel-item>
+          </template>
         </el-carousel>
       </el-card>
       <el-card class="info">
@@ -41,7 +50,7 @@
 
       <el-row style="margin-bottom: 2vh">
         <el-button v-if="!joined" type="primary" class="button" @click="join()">加入社团</el-button>
-        <el-button v-else disabled class="button">{{message}}</el-button>
+        <el-button v-else disabled class="button">{{ message }}</el-button>
       </el-row>
       <el-button v-if="quit"
                  type="danger"
@@ -70,6 +79,7 @@ import {
 } from '@/api/societies';
 import * as DateUtil from '@/utils/DateUtil';
 import { queryActivityByAll } from '@/api/activity';
+import { queryPhotoByExample } from '@/api/photo';
 
 export default {
   name: 'societiesShow',
@@ -135,17 +145,23 @@ export default {
       returnActive: false,
       joined: false,
       quit: false,
+      url: 'http://localhost:9090/image/',
+      photoList: [],
+      list: [],
     };
   },
   created() {
     this.getSocieties();
     this.queryActivity();
+    this.queryPhoto();
   },
   watch: {
     id: {
       handler() {
         this.$nextTick(() => {
           this.getSocieties();
+          this.queryActivity();
+          this.queryPhoto();
         });
       },
       deep: true,
@@ -299,6 +315,23 @@ export default {
             data.endtime = item.endtime.split(' ')[0];
             return data;
           });
+        });
+    },
+
+    /**
+     * 查询轮播图
+     */
+    queryPhoto() {
+      queryPhotoByExample({
+        sid: this.id,
+        name: '',
+        startTime: '',
+        endTime: '',
+        status: 1,
+      })
+        .then((res) => {
+          this.photoList = res.data.slice(0, 5);
+          this.list = this.photoList.map((item) => this.url + item.path);
         });
     },
   },

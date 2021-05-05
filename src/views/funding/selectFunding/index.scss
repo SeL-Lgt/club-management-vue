@@ -1,0 +1,19 @@
+.selected {
+  .el-form {
+    display: flex;
+
+    ::v-deep .el-form-item {
+      display: flex;
+      white-space: nowrap;
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .el-range-editor.el-input__inner {
+        width: 100%;
+      }
+    }
+  }
+}

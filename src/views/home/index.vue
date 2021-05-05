@@ -179,7 +179,7 @@ import maskDemo from '@/components/maskDemo/index.vue';
 import societiesShow from '@/views/societiesShow/index.vue';
 import activityQuery from '@/views/activity/query/index.vue';
 
-import { login, registered } from '@/api/user';
+import { login, queryUserByNumber, registered } from '@/api/user';
 import { querySocietiesType, createSocieties, querySocietiesByAll } from '@/api/societies';
 import { queryActivityByAll, addActivityPeople } from '@/api/activity';
 import * as checkRules from '@/utils/InfoRules';
@@ -410,6 +410,17 @@ export default {
               type: 'success',
             });
             // this.$router.push('/backHome');
+            queryUserByNumber({ number: sessionStorage.getItem('user') })
+              .then((res2) => {
+                this.$store.commit('saveUserInfo', res2.data);
+                if (res2.data.type === '2') {
+                  sessionStorage.setItem('type', '4');
+                } else if (res2.data.societiesPersonnel.length > 0) {
+                  sessionStorage.setItem('type', '1');
+                } else {
+                  sessionStorage.setItem('type', '0');
+                }
+              });
             this.reload();
           } else {
             this.$message.error('用户名或密码错误');

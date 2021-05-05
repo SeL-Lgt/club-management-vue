@@ -1,4 +1,4 @@
-import { axiosPostJson } from '@/utils/request';
+import { axiosPostJson, axiosGetJson } from '@/utils/request';
 
 /**
  * 登录
@@ -34,4 +34,13 @@ export function updateUser(params) {
  */
 export function queryUserByNumber(params) {
   return axiosPostJson('/user/queryUserByNumber', params);
+}
+
+/**
+ * 查询指导老师
+ * @param params
+ * @returns {Promise | Promise<unknown>}
+ */
+export function getTeacher() {
+  return axiosGetJson('/user/getTeacher');
 }

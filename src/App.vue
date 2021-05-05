@@ -27,6 +27,13 @@ export default {
       queryUserByNumber({ number: sessionStorage.getItem('user') })
         .then((res) => {
           this.$store.commit('saveUserInfo', res.data);
+          if (res.data.type === '2') {
+            sessionStorage.setItem('type', '4');
+          } else if (res.data.societiesPersonnel.length > 0) {
+            sessionStorage.setItem('type', '1');
+          } else {
+            sessionStorage.setItem('type', '0');
+          }
         });
     }
     querySocietiesType()

@@ -1,0 +1,42 @@
+#backHome {
+  .top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5vh;
+
+    .data {
+      width: 100%;
+      margin-right: 1vw;
+      text-align: center;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .title {
+        font-size: 1.2rem;
+        margin-bottom: 2vh;
+      }
+
+      .value {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .activity {
+    .title {
+      font-size: 1.2rem;
+      margin-bottom: 2vh;
+    }
+  }
+
+  .affairs {
+    .title {
+      font-size: 1.2rem;
+      margin-bottom: 2vh;
+    }
+    margin-bottom: 5vh;
+  }
+}
