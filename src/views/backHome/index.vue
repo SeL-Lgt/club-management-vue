@@ -5,15 +5,15 @@
       <div class="top">
         <el-card class="data">
           <p class="title">社团人数</p>
-          <p class="value">0</p>
+          <p class="value">{{ people }}人</p>
         </el-card>
         <el-card class="data">
           <p class="title">社团相片</p>
-          <p class="value">0</p>
+          <p class="value">{{ photo }}张</p>
         </el-card>
         <el-card class="data">
           <p class="title">社团经费</p>
-          <p class="value">0</p>
+          <p class="value">{{ money }}元</p>
         </el-card>
       </div>
       <el-card class="activity">
@@ -38,7 +38,9 @@ import * as DateUtil from '@/utils/DateUtil';
 import { queryActivityByAll } from '@/api/activity';
 import MyTable from '@/components/table/index.vue';
 import * as echarts from 'echarts';
-import { deleteSocietiesPersonnel } from '@/api/societies';
+import { queryPhotoByAll } from '@/api/photo';
+import { deleteSocietiesPersonnel, querySocietiesPersonnelAll, querySocietiesByCondition } from '@/api/societies';
+import { queryTask } from '@/api/task';
 
 export default {
   name: 'backHome',
@@ -78,27 +80,62 @@ export default {
         starttime: '',
         endtime: '',
       },
-      pieDate: [{
-        value: 1,
-        name: '未处理',
-      }, {
-        value: 1,
-        name: '已处理',
-      }],
+      pieDate: [
+        {
+          value: 0,
+          name: '未处理',
+        },
+        {
+          value: 0,
+          name: '已处理',
+        }],
+      people: 0,
+      photo: 0,
+      money: 0,
     };
   },
   created() {
-    this.queryActivity();
   },
   mounted() {
-    this.pieEcharts();
+    this.queryActivity();
+    this.getTotal();
   },
   methods: {
+    /**
+     * 查询社团各类数据
+     */
+    getTotal() {
+      const { sid } = this.$store.state.nowSocieties;
+      querySocietiesPersonnelAll({ sId: sid })
+        .then((res) => {
+          this.people = res.data.length;
+        });
+      queryPhotoByAll({ sid })
+        .then((res) => {
+          this.photo = res.data.length;
+        });
+      querySocietiesByCondition({ id: sid })
+        .then((res) => {
+          this.money = res.data[0].money;
+        });
+
+      queryTask({ sid, status: '0' }).then((res) => {
+        this.pieDate[0].value = res.data.length;
+      });
+      queryTask({ sid, status: '2' }).then((res) => {
+        this.pieDate[1].value = res.data.length;
+      });
+      queryTask({ sid, status: '3' }).then((res) => {
+        this.pieDate[1].value += res.data.length;
+      });
+      setTimeout(() => {
+        this.pieEcharts();
+      }, 100);
+    },
     /**
      * 查询活动列表
      */
     queryActivity() {
-      this.form.sid = this.id;
       if (this.time != null && this.time.length > 0) {
         this.form.starttime = DateUtil.formatDate(this.time[0], 3);
         this.form.endtime = DateUtil.formatDate(this.time[1], 4);

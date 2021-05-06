@@ -18,7 +18,6 @@ Vue.use(ElementUI);
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
-  console.log(sessionStorage.getItem('type'));
   if (to.path === '/backHome') {
     if (sessionStorage.getItem('type') === '1') {
       next();

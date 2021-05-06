@@ -264,7 +264,6 @@ export default {
     photoDetail(item) {
       this.dialogDetail = true;
       this.dialogDetailForm = item;
-      console.log(item);
     },
 
     /**

@@ -106,11 +106,11 @@ export default {
           label: '未开始',
           type: 0,
         }, {
-          label: '未完成',
-          type: 1,
-        }, {
-          label: '已完成',
+          label: '已拒绝',
           type: 2,
+        }, {
+          label: '已通过',
+          type: 3,
         }],
       tableProp: [
         {
@@ -220,8 +220,11 @@ export default {
               case 1:
                 data.statusName = '未完成';
                 break;
+              case 2:
+                data.statusName = '已拒绝';
+                break;
               default:
-                data.statusName = '已完成';
+                data.statusName = '已通过';
             }
 
             return data;

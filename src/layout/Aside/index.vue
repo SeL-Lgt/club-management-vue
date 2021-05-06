@@ -60,26 +60,33 @@ export default {
   data() {
     return {
       items: [],
-      job: this.$store.state.nowSocieties.job || this.$store.state.userInfo.type === 2 ? 4 : 0,
+      job: null,
     };
   },
   mounted() {
-    if (this.$store.state.nowSocieties != null) {
-      this.getMenu(this.$store.state.nowSocieties.job);
-    } else {
-      this.getMenu(this.$store.state.userInfo.type === 2 ? 4 : 0);
-    }
+    this.getJob();
   },
   watch: {
     job: {
       handler() {
         this.$nextTick(() => {
-          this.getMenu(this.job);
+          this.getJob();
         });
       },
     },
   },
   methods: {
+
+    getJob() {
+      if (this.$store.state.nowSocieties.job != null) {
+        this.getMenu(this.$store.state.nowSocieties.job);
+      } else if (this.$store.state.userInfo.type === 2) {
+        this.getMenu(4);
+      } else {
+        this.getMenu(4);
+      }
+    },
+
     getMenu(index) {
       switch (index) {
         case 1: {
@@ -149,14 +156,6 @@ export default {
               index: '/funding',
               title: '经费管理',
               subs: [
-                {
-                  index: 'createFunding',
-                  title: '申请经费',
-                },
-                {
-                  index: 'processFunding',
-                  title: '经费分配',
-                },
                 {
                   index: 'selectFunding',
                   title: '经费查询',
@@ -238,10 +237,6 @@ export default {
               title: '经费管理',
               subs: [
                 {
-                  index: 'createFunding',
-                  title: '申请经费',
-                },
-                {
                   index: 'processFunding',
                   title: '经费分配',
                 },
@@ -306,10 +301,6 @@ export default {
               index: '/funding',
               title: '经费管理',
               subs: [
-                // {
-                //   index: 'createFunding',
-                //   title: '申请经费',
-                // },
                 {
                   index: 'processFunding',
                   title: '经费分配',
@@ -355,6 +346,7 @@ export default {
                 },
               ],
             }];
+          break;
         }
       }
     },

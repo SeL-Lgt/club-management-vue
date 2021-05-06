@@ -2,15 +2,6 @@
   <div id="Member">
     <el-row>
       <el-form>
-        <el-form-item label="当前社团" prop="sId">
-          <el-select v-model="form.sid" placeholder="所属社团">
-            <el-option v-for="(item,index) in societies"
-                       :key="index"
-                       :label="item.association+item.sname"
-                       :value="item.sid"
-            />
-          </el-select>
-        </el-form-item>
         <el-form-item label="名字" prop="name">
           <el-input v-model="form.name" placeholder="请选择查询名字" clearable/>
         </el-form-item>
@@ -40,7 +31,24 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <MyTable :tableProp="tableProp" :tableData="tableData"/>
+    <MyTable :tableProp="tableProp" :tableData="tableData">
+      <el-table-column
+        v-if="$store.state.nowSocieties.job===3"
+        slot="operating"
+        prop="operating"
+        label="操作"
+        align="center"
+      >
+        <template v-slot="scope">
+          <el-button type="danger"
+                     :disabled
+                       ="scope.row.number===$store.state.userInfo.number"
+                     @click="deleteSocietiesPersonnel(scope.row)">
+            移除成员
+          </el-button>
+        </template>
+      </el-table-column>
+    </MyTable>
 
   </div>
 </template>
@@ -48,10 +56,11 @@
 <script>
 import MyTable from '@/components/table/index.vue';
 import * as DateUtil from '@/utils/DateUtil';
-import { querySocietiesPersonnelByExample } from '@/api/societies';
+import { querySocietiesPersonnelByExample, deleteSocietiesPersonnel } from '@/api/societies';
 
 export default {
   name: 'Member',
+  inject: ['reload'],
   components: {
     MyTable,
   },
@@ -59,10 +68,11 @@ export default {
     return {
       form: {
         name: '',
-        sid: null,
+        sid: this.$store.state.nowSocieties.sid,
         job: null,
         startTime: '',
         endTime: '',
+        status: 1,
       },
       time: [],
       tableProp: [
@@ -96,31 +106,10 @@ export default {
       societiesJobs: this.$store.state.societiesJobs,
     };
   },
-  created() {
-    this.getSelect();
+  mounted() {
     this.onSubmit();
   },
   methods: {
-    /**
-     * 获取所属社团
-     */
-    getSelect() {
-      this.societies = this.$store.state.societiesPersonnel.map((item) => {
-        const temp = {
-          job: item.job,
-          sid: item.sid,
-          association: '',
-          sname: item.societies.sname,
-        };
-        temp.association = this.$store.state.societiesType
-          // eslint-disable-next-line no-shadow
-          .filter((value) => value.id === item.societies.association)
-          // eslint-disable-next-line no-shadow
-          .map((item) => item.typename);
-        return temp;
-      });
-      this.form.sid = this.societies[0].sid;
-    },
     /**
      * 查询社团信息
      */
@@ -132,11 +121,13 @@ export default {
         this.form.startTime = '';
         this.form.endTime = '';
       }
+      console.log(this.form);
       querySocietiesPersonnelByExample(this.form)
         .then((res) => {
           this.tableData = res.data.filter((value) => value.societiesPersonnel.length > 0)
             .map((item) => {
               const data = {
+                uid: item.id,
                 name: item.name,
                 number: item.number,
                 job: '',
@@ -151,6 +142,29 @@ export default {
               return data;
             });
         });
+    },
+
+    /**
+     * 移除成员
+     * @param row
+     */
+    deleteSocietiesPersonnel(row) {
+      console.log(row);
+      const data = {
+        sid: this.$store.state.nowSocieties.sid,
+        uid: row.uid,
+      };
+      deleteSocietiesPersonnel(data).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '移除成功',
+            type: 'success',
+          });
+          this.reload();
+        } else {
+          this.$message.error('移除失败');
+        }
+      });
     },
   },
 };

@@ -1,5 +1,4 @@
 const Funding = () => import('@/views/funding/index');
-const CreateFunding = () => import('@/views/funding/createFunding/index');
 const ProcessFunding = () => import('@/views/funding/processFunding/index');
 const SelectFunding = () => import('@/views/funding/selectFunding/index');
 
@@ -12,13 +11,6 @@ export default {
   component: Funding,
   children: [
     {
-      path: 'createFunding',
-      name: 'CreateFunding',
-      meta: {
-        title: '申请经费',
-      },
-      component: CreateFunding,
-    }, {
       path: 'processFunding',
       name: 'ProcessFunding',
       meta: {

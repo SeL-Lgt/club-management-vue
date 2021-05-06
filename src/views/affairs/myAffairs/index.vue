@@ -47,22 +47,22 @@
         <template v-slot="scope">
           <el-button type="primary"
                      :disabled
-                       ="scope.row.status==2||scope.row.number!=$store.state.userInfo.id"
+                       ="scope.row.status!==0||scope.row.number!==$store.state.userInfo.id"
                      @click="updateTask(scope.row,2)">
             允许
           </el-button>
           <el-button type="danger"
                      :disabled
-                       ="scope.row.status==3||scope.row.number!=$store.state.userInfo.id"
+                       ="scope.row.status!==0||scope.row.number!==$store.state.userInfo.id"
                      @click="updateTask(scope.row,3)">
             拒绝
           </el-button>
-          <el-button type="info"
-                     :disabled
-                       ="scope.row.status>1||scope.row.number!=$store.state.userInfo.id"
-                     @click="updateTask(scope.row,1)">
-            忽略
-          </el-button>
+<!--          <el-button type="info"-->
+<!--                     :disabled-->
+<!--                       ="scope.row.status>1||scope.row.number!=$store.state.userInfo.id"-->
+<!--                     @click="updateTask(scope.row,1)">-->
+<!--            忽略-->
+<!--          </el-button>-->
         </template>
       </el-table-column>
     </MyTable>

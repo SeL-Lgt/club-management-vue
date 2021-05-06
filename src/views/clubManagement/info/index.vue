@@ -39,15 +39,15 @@
     </el-col>
     <el-col :span="4" class="left">
       <el-image :src="Logo"/>
-      <el-row>
-        <el-select v-model="form.id" placeholder="所属社团" @change="getInfo">
-          <el-option v-for="(item,index) in societies"
-                     :key="index"
-                     :label="item.association[0]+item.sname"
-                     :value="item.sid"
-          />
-        </el-select>
-      </el-row>
+<!--      <el-row>-->
+<!--        <el-select v-model="form.id" placeholder="所属社团" @change="getInfo">-->
+<!--          <el-option v-for="(item,index) in societies"-->
+<!--                     :key="index"-->
+<!--                     :label="item.association[0]+item.sname"-->
+<!--                     :value="item.sid"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-row>-->
       <el-button v-if="changer"
                  type="primary"
                  :disabled="disableChanger"
@@ -78,7 +78,7 @@ export default {
     return {
       Logo,
       form: {
-        id: null,
+        id: this.$store.state.nowSocieties.sid,
         sname: null,
         association: null,
         date: null,
