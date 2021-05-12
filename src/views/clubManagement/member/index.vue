@@ -33,6 +33,20 @@
     </el-row>
     <MyTable :tableProp="tableProp" :tableData="tableData">
       <el-table-column
+        v-if="$store.state.userInfo.type===2"
+        slot="operating"
+        prop="operating"
+        label="操作"
+        align="center"
+      >
+        <template v-slot="scope">
+          <el-button type="primary"
+                     @click="selectSocietiesInfo(scope.row)">
+            查看社团信息
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="$store.state.nowSocieties.job===3"
         slot="operating"
         prop="operating"
@@ -144,6 +158,18 @@ export default {
         });
     },
 
+    /**
+     * 查看社团信息
+     */
+    selectSocietiesInfo(row) {
+      console.log(row);
+      this.$router.push({
+        path: '/clubManagement/info',
+        query: {
+          id: row.id,
+        },
+      });
+    },
     /**
      * 移除成员
      * @param row

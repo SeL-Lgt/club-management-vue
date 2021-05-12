@@ -3,7 +3,7 @@
     <el-row class="selected">
       <el-form>
         <el-form-item label="金额范围">
-          <el-select v-model="moneyCheck" placeholder="请选择范围">
+          <el-select v-model="moneyCheck" placeholder="请选择范围" clearable>
             <el-option v-for="(item,index) in moneyList"
                        :key="index"
                        :label="item.label"
@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="申请状态">
-          <el-select v-model="form.status">
+          <el-select v-model="form.status" clearable>
             <el-option v-for="(item,index) in statusList"
                        :key="index"
                        :label="item.label"
@@ -34,7 +34,7 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row>
+    <el-row v-if="$store.state.userInfo.type===1">
       <el-button type="primary" @click="dialogVisible=true">申请经费</el-button>
     </el-row>
     <MyTable :table-prop="tableProp" :table-data="tableData"/>
@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       form: {
-        sid: this.$store.state.nowSocieties.sid,
+        sid: this.$store.state.nowSocieties.sid || '',
         startTime: '',
         endTime: '',
         min: null,

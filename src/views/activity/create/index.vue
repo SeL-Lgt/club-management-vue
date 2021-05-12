@@ -5,14 +5,8 @@
              :model="form"
              label-width="10%"
     >
-      <el-form-item label="社团">
-        <el-select v-model="form.sid" placeholder="所属社团">
-          <el-option v-for="(item,index) in societies"
-                     :key="index"
-                     :label="item.association+item.sname"
-                     :value="item.sid"
-          />
-        </el-select>
+      <el-form-item label="归属社团">
+        {{ $store.state.nowSocieties.sname }}
       </el-form-item>
       <el-form-item label="活动名字" prop="name">
         <el-input v-model="form.name"/>
@@ -66,7 +60,7 @@ export default {
   data() {
     return {
       form: {
-        sid: '',
+        sid: this.$store.state.nowSocieties.sid,
         name: '',
         principal: this.$store.state.userInfo.id, // 负责人姓名
         type: '',
@@ -116,13 +110,13 @@ export default {
           sname: item.societies.sname,
         };
         temp.association = this.$store.state.societiesType
-          // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line no-shadow
           .filter((value) => value.id === item.societies.association)
-          // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line no-shadow
           .map((item) => item.typename);
         return temp;
       });
-      this.form.sid = this.societies[0].sid;
+      // this.form.sid = this.societies[0].sid;
     },
     /**
      * 重置
@@ -143,7 +137,8 @@ export default {
   .el-select {
     width: 100%;
   }
-  .el-date-editor{
+
+  .el-date-editor {
     width: 100%;
   }
 }

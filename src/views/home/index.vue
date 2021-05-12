@@ -1,7 +1,7 @@
 <template>
   <div id="Home">
     <header @click="slide()">
-      <h1>社团管理系统</h1>
+      <h1>高校社团事务管理信息系统</h1>
       <div class="nav">
         <div class="arrow arrow-one"></div>
         <div class="arrow arrow-two"></div>

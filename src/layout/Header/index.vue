@@ -34,6 +34,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'Header',
   inject: ['reload'],

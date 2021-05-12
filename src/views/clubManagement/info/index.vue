@@ -116,7 +116,7 @@ export default {
           .map((item) => item.typename);
         return temp;
       });
-      this.form.id = this.societies[0].sid;
+      // this.form.id = this.societies[0].sid;
     },
     /**
      * 获取信息

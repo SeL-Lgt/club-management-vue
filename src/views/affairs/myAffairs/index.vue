@@ -57,12 +57,12 @@
                      @click="updateTask(scope.row,3)">
             拒绝
           </el-button>
-<!--          <el-button type="info"-->
-<!--                     :disabled-->
-<!--                       ="scope.row.status>1||scope.row.number!=$store.state.userInfo.id"-->
-<!--                     @click="updateTask(scope.row,1)">-->
-<!--            忽略-->
-<!--          </el-button>-->
+          <!--          <el-button type="info"-->
+          <!--                     :disabled-->
+          <!--                       ="scope.row.status>1||scope.row.number!=$store.state.userInfo.id"-->
+          <!--                     @click="updateTask(scope.row,1)">-->
+          <!--            忽略-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
     </MyTable>
@@ -160,9 +160,9 @@ export default {
           sname: item.societies.sname,
         };
         temp.association = this.$store.state.societiesType
-          // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line no-shadow
           .filter((value) => value.id === item.societies.association)
-          // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line no-shadow
           .map((item) => item.typename);
         return temp;
       });

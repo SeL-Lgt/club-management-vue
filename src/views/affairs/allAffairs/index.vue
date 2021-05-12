@@ -87,6 +87,7 @@ import { querySocietiesPersonnelAll } from '@/api/societies';
 
 export default {
   name: 'allAffairs',
+  inject: ['reload'],
   components: {
     MyTable,
   },
@@ -106,10 +107,10 @@ export default {
           label: '未开始',
           type: 0,
         }, {
-          label: '已拒绝',
+          label: '已通过',
           type: 2,
         }, {
-          label: '已通过',
+          label: '已拒绝',
           type: 3,
         }],
       tableProp: [
@@ -221,10 +222,10 @@ export default {
                 data.statusName = '未完成';
                 break;
               case 2:
-                data.statusName = '已拒绝';
+                data.statusName = '已通过';
                 break;
               default:
-                data.statusName = '已通过';
+                data.statusName = '已拒绝';
             }
 
             return data;
@@ -255,7 +256,15 @@ export default {
       this.taskForm.date = DateUtil.formatDate(this.dialogTime, 2);
       createTask(this.taskForm)
         .then((res) => {
-          console.log(res);
+          if (res.code === 200) {
+            this.$message({
+              message: '任务发布成功',
+              type: 'success',
+            });
+            this.reload();
+          } else {
+            this.$message.error('任务发布失败');
+          }
         });
     },
   },

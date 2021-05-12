@@ -204,7 +204,7 @@ export default {
       },
     };
   },
-  created() {
+  mounted() {
     this.queryPhotoByAll();
   },
   methods: {
@@ -221,28 +221,31 @@ export default {
     createPhoto() {
       const temp = this.dialogForm;
 
-      this.$refs.upload.uploadFiles.forEach((file) => {
-        const index = file.name.lastIndexOf('.');
+      this.$nextTick(() => {
+        this.$refs.upload.uploadFiles.forEach((file) => {
+          const index = file.name.lastIndexOf('.');
 
-        getBase64(file.raw)
-          .then((res) => {
-            this.dialogForm.image = encodeURI(res);
-            temp.type = file.name.substring(index + 1, file.name.length);
-            saveImage(temp)
-              .then((res2) => {
-                if (res2.code === 200) {
-                  this.$message({
-                    message: `${file.name}上传成功`,
-                    type: 'success',
-                  });
-                } else {
-                  this.$message.error(`${file.name}上传失败`);
-                }
-              });
-          });
+          getBase64(file.raw)
+            .then((res) => {
+              this.dialogForm.image = encodeURI(res);
+              temp.type = file.name.substring(index + 1, file.name.length);
+              saveImage(temp)
+                .then((res2) => {
+                  if (res2.code === 200) {
+                    this.$message({
+                      message: `${file.name}上传成功`,
+                      type: 'success',
+                    });
+                  } else {
+                    this.$message.error(`${file.name}上传失败`);
+                  }
+                  this.reload();
+                });
+            });
+        });
       });
-      this.reload();
     },
+
     resetForm() {
       this.$refs.dialogForm.resetFields();
       this.$refs.upload.uploadFiles = [];

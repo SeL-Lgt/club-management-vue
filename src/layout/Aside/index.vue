@@ -83,7 +83,7 @@ export default {
       } else if (this.$store.state.userInfo.type === 2) {
         this.getMenu(4);
       } else {
-        this.getMenu(4);
+        this.getMenu(0);
       }
     },
 
@@ -274,10 +274,6 @@ export default {
                 {
                   index: 'member',
                   title: '查看社团成员',
-                },
-                {
-                  index: 'info',
-                  title: '查看社团信息',
                 },
               ],
             },
